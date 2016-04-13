@@ -2,11 +2,14 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import model.Title
+import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.{Action, Controller}
 
 @Singleton
-class MoviesController @Inject()() extends Controller {
+class MoviesController @Inject()(persistenceManager: PersistenceManager) extends Controller {
+  implicit val formats = org.json4s.DefaultFormats
 
   def viewMovie = Action {
     Ok(views.html.movie())
@@ -15,4 +18,19 @@ class MoviesController @Inject()() extends Controller {
   def viewMovies = Action {
     Ok(views.html.movies())
   }
+
+  def movies = Action {
+      val movies = persistenceManager.listMovies()
+      Ok(write(MoviesResponse(serializeTitles(movies)))).as(JSON)
+  }
+
+  private def serializeTitles(movies: List[Title]): List[SerializedTitle] = {
+    movies.map { m =>
+      val posterUrl = "<img src='" + m.posterUrl + "' />"
+      SerializedTitle(m.imdbID, m.year, m.title, posterUrl)
+    }
+  }
 }
+
+case class MoviesResponse(movies: List[SerializedTitle])
+case class SerializedTitle(imdbID: String, year: Int, title: String, posterUrl: String)
