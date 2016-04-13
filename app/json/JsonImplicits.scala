@@ -24,7 +24,7 @@ object JsonImplicits {
     ("title" -> r.title) ~
     ("score" -> r.score) ~
     ("subtitleId" -> r.subtitleId) ~
-    ("subEntries" -> r.entries)
+    ("subEntries" -> r.subEntries)
 
   implicit def toJValue(e: SubEntry): JValue = {
     ("number" -> e.number) ~

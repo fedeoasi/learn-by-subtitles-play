@@ -265,6 +265,6 @@ case class DisplayableSubtitleResult(highlightedText: String, subtitleId: String
                                 score: Float, entries: List[SubEntry])
 
 case class SearchSubtitleResult(subtitleId: String, title: String,
-                                     score: Float, entries: List[SubEntry])
+                                score: Float, subEntries: List[SubEntry])
 
 case class SuggestionResult(id: String, title: String, score: Float)
