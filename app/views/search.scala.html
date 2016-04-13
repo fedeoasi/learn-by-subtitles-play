@@ -1,0 +1,16 @@
+@()
+
+@main("Search", "redT") {
+    @jsimport("subtitleTable.js")
+    @jsimport("search.js")
+
+    <div id="search2">
+        <div class="form-wrapper cf">
+            <input type="text" id="imdbSearchInput" placeholder="Search here..." required="">
+            <button type="submit" onclick="doSearch()" class="redB">Search</button>
+        </div>
+    </div>
+
+    <div id="results" class="standardTableDiv"></div>
+    <div id="subtitles" class="standardTableDiv"></div>
+}
