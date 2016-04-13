@@ -1,0 +1,23 @@
+@(newLocation: String)
+
+@jsimport("jquery.autocomplete-1.2.16.js")
+@jsimport("autocompleteMovie.js")
+
+<div id="search2">
+    <div class="form-wrapper cf">
+        <input type="text" id="imdbSearchInput" placeholder="Search here..." required="">
+        <button type="submit" onclick="something()" class="redB">Search</button>
+    </div>
+</div>
+
+<script type="application/javascript">
+    function something() {
+        var title = $('#imdbSearchInput').val();
+        if(title.length > 0) {
+            window.location = "@newLocation" + title;
+        } else {
+            alert('Inappropriate Value');
+        }
+        return false;
+    }
+</script>

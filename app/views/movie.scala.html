@@ -1,0 +1,10 @@
+@()
+
+@main("Add Movie", "violetT") {
+    @jsimport("subtitleTable.js")
+    @jsimport("search.js")
+
+    @searchBox("/movie?title=")
+
+    <div id="movieDiv"></div>
+}
