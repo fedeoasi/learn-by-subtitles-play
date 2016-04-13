@@ -5,10 +5,11 @@ import java.text.SimpleDateFormat
 import java.util.Scanner
 import java.util.regex.Pattern
 
+import com.google.inject.Inject
 import model.SubEntry
 import play.api.Logger._
 
-class SrtParser {
+class SrtParser @Inject() () {
   private val timePattern = Pattern.compile("\\d\\d:\\d\\d:\\d\\d,\\d\\d\\d")
   val timeFormat = new SimpleDateFormat("HH:mm:ss,SSS")
 

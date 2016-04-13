@@ -24,3 +24,6 @@ GET     /api/movies  controllers.MoviesController.movies()
 
 GET     /series      controllers.MoviesController.viewSeries()
 GET     /api/series  controllers.MoviesController.series()
+
+GET     /subtitles/:imdbId      controllers.SubtitleController.viewSubtitle(imdbId: String)
+GET     /api/subtitles/:imdbId  controllers.SubtitleController.subtitle(imdbId: String)

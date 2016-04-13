@@ -1,0 +1,17 @@
+@(imdbId: String)
+
+@main(s"Subtitles for $imdbId", "violetT") {
+    <script>
+            var imdbId = '@imdbId';
+    </script>
+
+    @jsimport("subtitleTable.js")
+    @jsimport("subtitle.js")
+
+    <div id="subtitlesTable" class="standardTableDiv">
+        <span>
+            <img height="50px" src="/images/ajaxSpinner.gif">
+            Loading subtitle...
+        </span>
+    </div>
+}

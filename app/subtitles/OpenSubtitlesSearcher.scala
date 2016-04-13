@@ -1,5 +1,6 @@
 package subtitles
 
+import com.google.inject.Inject
 import logging.Logging
 import model._
 import org.apache.xmlrpc.client.XmlRpcClient
@@ -27,7 +28,7 @@ trait SeriesDetailProvider {
   def getSeriesDetails(imdbId: String): List[Season]
 }
 
-class OpenSubtitlesSearcher(val persistenceManager: PersistenceManager)
+class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
   extends SubtitleSearcher with SeriesDetailProvider with Logging {
 
   val APP_USER_AGENT = "LBS_USER_AGENT"
