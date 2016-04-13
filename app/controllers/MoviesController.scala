@@ -2,15 +2,17 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import persistence.PersistenceManager
 import play.api.mvc.{Action, Controller}
 
 @Singleton
 class MoviesController @Inject()() extends Controller {
-  def movie = Action {
+
+  def viewMovie = Action {
     Ok(views.html.movie())
   }
 
-  def movies = Action {
+  def viewMovies = Action {
     Ok(views.html.movies())
   }
 }
