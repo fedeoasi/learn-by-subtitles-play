@@ -19,3 +19,6 @@ GET     /api/imovies/:id      controllers.IMoviesController.imovie(id: Int)
 GET     /movie       controllers.MoviesController.viewMovie()
 GET     /movies      controllers.MoviesController.viewMovies()
 GET     /api/movies  controllers.MoviesController.movies()
+
+GET     /series      controllers.MoviesController.viewSeries()
+GET     /api/series  controllers.MoviesController.series()

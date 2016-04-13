@@ -24,6 +24,15 @@ class MoviesController @Inject()(persistenceManager: PersistenceManager) extends
       Ok(write(MoviesResponse(serializeTitles(movies)))).as(JSON)
   }
 
+  def viewSeries = Action {
+    Ok(views.html.series())
+  }
+
+  def series = Action {
+      val movies = persistenceManager.listSeries()
+      Ok(write(SeriesResponse(serializeTitles(movies)))).as(JSON)
+  }
+
   private def serializeTitles(movies: List[Title]): List[SerializedTitle] = {
     movies.map { m =>
       val posterUrl = "<img src='" + m.posterUrl + "' />"
@@ -33,4 +42,5 @@ class MoviesController @Inject()(persistenceManager: PersistenceManager) extends
 }
 
 case class MoviesResponse(movies: List[SerializedTitle])
+case class SeriesResponse(series: List[SerializedTitle])
 case class SerializedTitle(imdbID: String, year: Int, title: String, posterUrl: String)
