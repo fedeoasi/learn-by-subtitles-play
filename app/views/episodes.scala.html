@@ -1,0 +1,26 @@
+@(imdbId: String)
+
+@main(s"Episodes for $imdbId", "violetT") {
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="/css2/demo_table.css">
+
+    @jsimport("episodes.js")
+
+    <script>
+        var imdbId = '@imdbId';
+    </script>
+
+    <div id="episodesTableWrapper" class="standardTableDiv">
+        <table id="episodesTable" class="standardTable">
+            <thead>
+                <tr>
+                    <th>C1</th>
+                    <th>C2</th>
+                    <th>C3</th>
+                    <th>C4</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+}

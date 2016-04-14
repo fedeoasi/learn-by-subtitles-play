@@ -18,12 +18,17 @@ GET     /api/imovies/:id      controllers.IMoviesController.imovie(id: Int)
 GET     /api/imovies          controllers.IMoviesController.imovies()
 GET     /imovies              controllers.IMoviesController.viewImovies()
 
-GET     /movie       controllers.MoviesController.viewMovie()
-GET     /movies      controllers.MoviesController.viewMovies()
-GET     /api/movies  controllers.MoviesController.movies()
+GET     /movie               controllers.MoviesController.viewMovie()
+GET     /movies              controllers.MoviesController.viewMovies()
+GET     /api/movies          controllers.MoviesController.movies()
+DELETE  /api/movies/:imdbId  controllers.MoviesController.deleteMovie(imdbId: String)
 
 GET     /series      controllers.MoviesController.viewSeries()
 GET     /api/series  controllers.MoviesController.series()
 
 GET     /subtitles/:imdbId      controllers.SubtitleController.viewSubtitle(imdbId: String)
 GET     /api/subtitles/:imdbId  controllers.SubtitleController.subtitle(imdbId: String)
+
+GET     /episodes/:imdbId      controllers.EpisodesController.viewEpisodes(imdbId: String)
+GET     /api/episodes/:imdbId  controllers.EpisodesController.episodes(imdbId: String)
+

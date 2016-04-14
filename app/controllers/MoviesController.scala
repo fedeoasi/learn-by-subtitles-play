@@ -20,8 +20,13 @@ class MoviesController @Inject()(persistenceManager: PersistenceManager) extends
   }
 
   def movies = Action {
-      val movies = persistenceManager.listMovies()
-      Ok(write(MoviesResponse(serializeTitles(movies)))).as(JSON)
+    val movies = persistenceManager.listMovies()
+    Ok(write(MoviesResponse(serializeTitles(movies)))).as(JSON)
+  }
+
+  def deleteMovie(imdbId: String) = Action {
+    val result = persistenceManager.deleteMovie(imdbId)
+    Ok(s"Deleted $result movie")
   }
 
   def viewSeries = Action {
