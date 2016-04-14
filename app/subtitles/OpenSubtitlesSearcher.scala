@@ -25,7 +25,7 @@ trait SubtitleSearcher {
 }
 
 trait SeriesDetailProvider {
-  def getSeriesDetails(imdbId: String): List[Season]
+  def get(imdbId: String): List[Season]
 }
 
 class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
@@ -109,7 +109,7 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
     sorted
   }
 
-  override def getSeriesDetails(imdbId: String): List[Season] = {
+  override def get(imdbId: String): List[Season] = {
     logger.info(s"Getting series details for: $imdbId")
     val candidates = getSubtitleCandidates(imdbId)
     val converted = subtitleResultsToMap(candidates, imdbId)

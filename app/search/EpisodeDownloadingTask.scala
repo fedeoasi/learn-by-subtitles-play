@@ -1,12 +1,13 @@
 package search
 
+import com.google.inject.Inject
 import config.Config
 import logging.Logging
 import persistence.PersistenceManager
 import services.SubtitlesService
 
-class EpisodeDownloadingTask(persistenceManager: PersistenceManager,
-                              subtitlesController: SubtitlesService)
+class EpisodeDownloadingTask @Inject() (persistenceManager: PersistenceManager,
+                                        subtitlesController: SubtitlesService)
   extends Runnable with Logging {
 
   val batchSize = 10
