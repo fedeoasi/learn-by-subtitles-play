@@ -9,6 +9,7 @@ trait Title {
   def posterUrl: String
   def isSeries: Boolean
   def isSimpleMovie: Boolean
+  def id: Option[Int]
 }
 
 case class Movie(imdbID: String, year: Int, title: String, posterUrl: String, id: Option[Int]) extends Title {
@@ -16,7 +17,7 @@ case class Movie(imdbID: String, year: Int, title: String, posterUrl: String, id
   def isSimpleMovie: Boolean = true
 }
 
-case class SeriesTitle(imdbID: String, year: Int, title: String, posterUrl: String) extends Title {
+case class SeriesTitle(imdbID: String, year: Int, title: String, posterUrl: String, id: Option[Int]) extends Title {
   def isSeries: Boolean = true
   def isSimpleMovie: Boolean = false
 }
@@ -30,13 +31,13 @@ case class IMovie(otherId: Long, title: String, year: Int, rating: BigDecimal, v
   def toTitle: Title = {
     titleType match {
       case MovieType => Movie(imdbId.get, year, title, poster, None)
-      case Series => SeriesTitle(imdbId.get, year, title, poster)
+      case Series => SeriesTitle(imdbId.get, year, title, poster, None)
     }
   }
 
   def toSeries: SeriesTitle = {
     require(titleType == Series)
-    SeriesTitle(imdbId.get, year, title, poster)
+    SeriesTitle(imdbId.get, year, title, poster, None)
   }
 }
 

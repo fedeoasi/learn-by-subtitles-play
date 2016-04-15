@@ -90,7 +90,7 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager wit
   }
 
   describe("Series") {
-    val series =  SeriesTitle("sImdbId", 1, "How I Met You", "http://something")
+    val series =  SeriesTitle("sImdbId", 1, "How I Met You", "http://something", None)
 
     it("return None for a non existent series") {
       val returnedSeries = persistenceManager.findSeriesById("randomId")
@@ -100,7 +100,7 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager wit
     it("should be able to save and retrieve a series") {
       persistenceManager.saveSeries(series)
       val returnedSeries = persistenceManager.findSeriesById(series.imdbID)
-      returnedSeries should be(Some(series))
+      returnedSeries.value.copy(id = None) should be(series)
       val returnedMovie = persistenceManager.findMovieById(series.imdbID)
       returnedMovie should be(None)
     }
@@ -137,7 +137,7 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager wit
     it("should find an episode by series id, season, and episode number") {
       val episode =  Episode("imdbId", 1, 1, "seriesId")
       persistenceManager.saveEpisode(episode)
-      val series = SeriesTitle("seriesId", 2000, "my series", "http://blabla")
+      val series = SeriesTitle("seriesId", 2000, "my series", "http://blabla", None)
       val returnedMovie = persistenceManager.findEpisodeForSeries(series.imdbID, 1, 1)
       returnedMovie should be(Some(episode))
     }
@@ -160,7 +160,7 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager wit
     describe("Movies and Episodes") {
       it("should return a map imdbId -> title for the requested imdbIds") {
         val movie = Movie("meId", 2013, "testMovie", "http://something.jpg", None)
-        val series = SeriesTitle("meId2", 2010, "testSeries", "http://something.jpg")
+        val series = SeriesTitle("meId2", 2010, "testSeries", "http://something.jpg", None)
         persistenceManager.saveMovie(movie)
         persistenceManager.saveSeries(series)
         val episode =  Episode("meId3", 1, 1, "meId2")

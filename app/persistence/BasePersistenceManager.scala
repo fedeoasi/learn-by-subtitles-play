@@ -137,12 +137,12 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   }
   
   private def movieFromDao(d: MovieDao): Movie = Movie(d.imdbID, d.year, d.title, d.posterUrl, d.id)
-  private def seriesFromDao(d: MovieDao): SeriesTitle = SeriesTitle(d.imdbID, d.year, d.title, d.posterUrl)
+  private def seriesFromDao(d: MovieDao): SeriesTitle = SeriesTitle(d.imdbID, d.year, d.title, d.posterUrl, d.id)
 
   private def titleFromDao(m: MovieDao): Title = {
     TitleType.typesByDiscriminator(m.movieType) match {
       case MovieType => Movie(m.imdbID, m.year, m.title, m.posterUrl, m.id)
-      case Series => SeriesTitle(m.imdbID, m.year, m.title, m.posterUrl)
+      case Series => SeriesTitle(m.imdbID, m.year, m.title, m.posterUrl, m.id)
     }
   }
 
