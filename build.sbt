@@ -9,6 +9,14 @@ scalaVersion := "2.11.7"
 val joda = "joda-time" % "joda-time" % "2.4"
 val jodaConvert = "org.joda" % "joda-convert" % "1.7"
 
+val webJars = {
+  val handlebars = "org.webjars.bower" % "handlebars" % "2.0.0"
+  val jQuery = "org.webjars" % "jquery" % "2.1.4"
+  val datatables = "org.webjars" % "datatables" % "1.10.9"
+  val datatablesTools = "org.webjars" % "datatables-tools" % "2.2.4-1"
+  Seq(handlebars, jQuery, datatables, datatablesTools)
+}
+
 libraryDependencies ++= Seq(
   jdbc,
   cache,
@@ -30,6 +38,6 @@ libraryDependencies ++= Seq(
   joda,
   jodaConvert,
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0-RC1" % Test
-)
+) ++ webJars
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"

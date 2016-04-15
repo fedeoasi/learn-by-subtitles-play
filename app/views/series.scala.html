@@ -1,25 +1,12 @@
 @()
 
 @main("My Series", "blueT") {
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
-    <link rel="stylesheet" href="/css2/demo_table.css">
-
+    @datatables()
     @jsimport("series.js")
 
     <div id="tableWrapper" class="standardTableDiv">
         <div id="myTable">
-            <table id="series" class="standardTable">
-                <thead>
-                    <tr>
-                        <th>C1</th>
-                        <th>C2</th>
-                        <th>C3</th>
-                        <th>C4</th>
-                        <th>C5</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <table id="series" class="standardTable"></table>
         </div>
     </div>
 }
