@@ -2,14 +2,14 @@ package persistence
 
 import model._
 import org.joda.time.DateTime
-import org.scalatest.{FunSpec, Matchers}
+import org.scalatest.{OptionValues, FunSpec, Matchers}
 
 trait WithPersistenceManager {
   val persistenceManager: PersistenceManager = new TestPersistenceManager()
 }
 
-class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager {
-  val movie =  Movie("imdbId", 2013, "testMovie", "http://something.jpg")
+class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager with OptionValues {
+  val movie =  Movie("imdbId", 2013, "testMovie", "http://something.jpg", None)
 
   describe("Movies") {
     it("return None for a non existent movie") {
@@ -20,20 +20,20 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager {
     it("should be able to save a movie") {
       persistenceManager.saveMovie(movie)
       val returnedMovie = persistenceManager.findMovieById(movie.imdbID)
-      returnedMovie should be(Some(movie))
+      returnedMovie.value.copy(id = None) should be(movie)
     }
 
     it("should not error out when adding an existing movie") {
       persistenceManager.saveMovie(movie)
       val returnedMovie = persistenceManager.findMovieById(movie.imdbID)
-      returnedMovie should be(Some(movie))
+      returnedMovie.value.copy(id = None) should be(movie)
     }
 
     it("should delete a movie") {
-      val movie =  Movie("toDelete", 2013, "testMovie", "http://something.jpg")
+      val movie =  Movie("toDelete", 2013, "testMovie", "http://something.jpg", None)
       persistenceManager.saveMovie(movie)
       val returnedMovie = persistenceManager.findMovieById(movie.imdbID)
-      returnedMovie should be(Some(movie))
+      returnedMovie.value.copy(id = None) should be(movie)
       persistenceManager.deleteMovie(movie.imdbID)
       persistenceManager.findMovieById(movie.imdbID) should be(None)
     }
@@ -46,7 +46,7 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager {
     }
 
     it("should be able to save a subtitle") {
-      val movie =  Movie("testMovie", 2012, "testMovie", "http://something.jpg")
+      val movie =  Movie("testMovie", 2012, "testMovie", "http://something.jpg", None)
       persistenceManager.saveMovie(movie)
       val subtitle = Subtitle("abc", "testMovie")
       persistenceManager.saveSubtitle(subtitle)
@@ -69,7 +69,7 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager {
     }
 
     it("should list the inserted subtitles as non-indexed") {
-      val movie =  Movie("testMovie3", 2013, "testMovie3", "http://something3.jpg")
+      val movie =  Movie("testMovie3", 2013, "testMovie3", "http://something3.jpg", None)
       persistenceManager.saveMovie(movie)
       val subtitle = Subtitle("abcd", "testMovie3")
       persistenceManager.saveSubtitle(subtitle)
@@ -78,7 +78,7 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager {
     }
 
     it("should list mark a subtitle as indexed") {
-      val movie =  Movie("testMovie4", 2013, "testMovie4", "http://something4.jpg")
+      val movie =  Movie("testMovie4", 2013, "testMovie4", "http://something4.jpg", None)
       persistenceManager.saveMovie(movie)
       val id: String = "abcd"
       val subtitle = Subtitle(id, "testMovie4")
@@ -106,7 +106,7 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager {
     }
 
     it("should not retrieve a movie with the given id") {
-      val movie =  Movie("msImdbId", 1, "Green Pile", "http://something")
+      val movie =  Movie("msImdbId", 1, "Green Pile", "http://something", None)
       persistenceManager.saveMovie(movie)
       val returnedMovie = persistenceManager.findSeriesById(movie.imdbID)
       returnedMovie should be(None)
@@ -159,7 +159,7 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager {
 
     describe("Movies and Episodes") {
       it("should return a map imdbId -> title for the requested imdbIds") {
-        val movie = Movie("meId", 2013, "testMovie", "http://something.jpg")
+        val movie = Movie("meId", 2013, "testMovie", "http://something.jpg", None)
         val series = SeriesTitle("meId2", 2010, "testSeries", "http://something.jpg")
         persistenceManager.saveMovie(movie)
         persistenceManager.saveSeries(series)

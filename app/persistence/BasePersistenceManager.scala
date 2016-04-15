@@ -91,7 +91,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     } else {
       throw new IllegalStateException("Unknown movie type")
     }
-    MovieDao(t.imdbID, t.year, t.title, mt.discriminator, t.posterUrl)
+    MovieDao(t.imdbID, t.year, t.title, mt.discriminator, t.posterUrl, None)
   }
 
   override def listMovies(): List[Movie] = {
@@ -136,12 +136,12 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
   
-  private def movieFromDao(d: MovieDao): Movie = Movie(d.imdbID, d.year, d.title, d.posterUrl)
+  private def movieFromDao(d: MovieDao): Movie = Movie(d.imdbID, d.year, d.title, d.posterUrl, d.id)
   private def seriesFromDao(d: MovieDao): SeriesTitle = SeriesTitle(d.imdbID, d.year, d.title, d.posterUrl)
 
   private def titleFromDao(m: MovieDao): Title = {
     TitleType.typesByDiscriminator(m.movieType) match {
-      case MovieType => Movie(m.imdbID, m.year, m.title, m.posterUrl)
+      case MovieType => Movie(m.imdbID, m.year, m.title, m.posterUrl, m.id)
       case Series => SeriesTitle(m.imdbID, m.year, m.title, m.posterUrl)
     }
   }
@@ -307,6 +307,6 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
   //TODO move this to IMovie or kill it
   private def toMovie(m: IMovie): Movie = {
-    Movie(m.imdbId.get, m.year, m.title, m.poster)
+    Movie(m.imdbId.get, m.year, m.title, m.poster, None)
   }
 }

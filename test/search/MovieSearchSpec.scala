@@ -16,8 +16,8 @@ class MovieSearchSpec extends FunSpec with Matchers with Logging with WithPersis
   val secondIMovie = IMovie(2, "Movie Two", 2005, BigDecimal(79), 2000, "Drama", "p2", MovieType, Some("bcd"))
   val thirdIMovie = IMovie(3, "Series One", 2003, BigDecimal(80), 2001, "Drama", "p3", Series, Some("cde"))
 
-  val firstMovie = Movie("abc", 2000, "Movie One", "p1")
-  val secondMovie = Movie("bcd", 2005, "Movie Two", "p2")
+  val firstMovie = Movie("abc", 2000, "Movie One", "p1", None)
+  val secondMovie = Movie("bcd", 2005, "Movie Two", "p2", None)
   val firstSeries = SeriesTitle("cde", 2003, "Series One", "p3")
 
   describe("Movie search") {

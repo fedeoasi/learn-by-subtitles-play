@@ -17,9 +17,9 @@ trait DBComponent {
 
   lazy val onDeleteAction: ForeignKeyAction = ForeignKeyAction.Cascade
 
-//  abstract class AnyTable[T](tag: Tag, tableName: String) extends Table[T](tag, tableName) {
-//    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc, O.NotNull)
-//  }
+  abstract class TableWithId[T](tag: Tag, tableName: String) extends Table[T](tag, tableName) {
+    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc, O.NotNull)
+  }
 
 //  class AnyTableQuery[DAO <: AnyDao, E <: AnyTable[DAO]](cons: Tag => E) extends TableQuery(cons) {
 //    private lazy val insertInvoker = this returning this.map(_.id)
@@ -30,7 +30,7 @@ trait DBComponent {
 //  }
 }
 
-case class MovieDao(imdbID: String, year: Int, title: String, movieType: String, posterUrl: String)
+case class MovieDao(imdbID: String, year: Int, title: String, movieType: String, posterUrl: String, id: Option[Int])
 case class SubtitleDao(id: String, imdbId: String, indexed: Boolean)
 
 trait LearnBySubtitlesDbComponent extends DBComponent {
@@ -45,13 +45,13 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
     )
   }
 
-  class Movies(tag: Tag) extends Table[MovieDao](tag, "MOVIES") {
-    def imdbId = column[String]("IMDB_ID", O.PrimaryKey)
+  class Movies(tag: Tag) extends TableWithId[MovieDao](tag, "MOVIES") {
+    def imdbId = column[String]("IMDB_ID")
     def title = column[String]("TITLE")
     def year = column[Int]("YEAR")
     def movieType = column[String]("MOVIE_TYPE")
     def posterUrl = column[String]("POSTER_URL")
-    def * = (imdbId, year, title, movieType, posterUrl) <> (MovieDao.tupled, MovieDao.unapply)
+    def * = (imdbId, year, title, movieType, posterUrl, id.?) <> (MovieDao.tupled, MovieDao.unapply)
   }
 
   object movies extends TableQuery(new Movies(_))
@@ -103,6 +103,10 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
   }
 
   object imovie extends TableQuery(new IMovies(_))
+
+  val tables = Seq(movies, subtitles, episodes, downloads, imovie)
+
+  def createStatements = tables.map(_.ddl.createStatements.mkString("\n"))
 }
 
 class LearnBySubtitlesDAL(override val driver: JdbcDriver) extends LearnBySubtitlesDbComponent with Profile

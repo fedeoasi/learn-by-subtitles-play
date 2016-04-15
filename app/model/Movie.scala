@@ -11,7 +11,7 @@ trait Title {
   def isSimpleMovie: Boolean
 }
 
-case class Movie(imdbID: String, year: Int, title: String, posterUrl: String) extends Title {
+case class Movie(imdbID: String, year: Int, title: String, posterUrl: String, id: Option[Int]) extends Title {
   def isSeries: Boolean = false
   def isSimpleMovie: Boolean = true
 }
@@ -29,7 +29,7 @@ case class SubtitleWithContent(subtitle: Subtitle, content: String)
 case class IMovie(otherId: Long, title: String, year: Int, rating: BigDecimal, votes: Long, genre: String, poster: String, titleType: TitleType, imdbId: Option[String]) {
   def toTitle: Title = {
     titleType match {
-      case MovieType => Movie(imdbId.get, year, title, poster)
+      case MovieType => Movie(imdbId.get, year, title, poster, None)
       case Series => SeriesTitle(imdbId.get, year, title, poster)
     }
   }
