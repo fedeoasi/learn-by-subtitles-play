@@ -17,10 +17,13 @@ val webJars = {
   Seq(handlebars, jQuery, datatables, datatablesTools)
 }
 
+lazy val flyway = "org.flywaydb" % "flyway-core" % "3.2.1"
+
 libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
+  flyway,
   "org.apache.xmlrpc" % "xmlrpc" % "3.1.3",
   "org.apache.xmlrpc" % "xmlrpc-client" % "3.1.3",
   "org.apache.commons" % "commons-io" % "1.3.2",
