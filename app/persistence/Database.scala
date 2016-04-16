@@ -65,17 +65,7 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
     def * = (imdbId, year, title, movieType, posterUrl, season, number, seriesImdbId, id.?) <> (TitleDao.tupled, TitleDao.unapply)
   }
 
-  object movies extends TableQuery(new Titles(_))
-
-  class Episodes(tag:Tag) extends Table[Episode](tag, "EPISODES") {
-    def imdbID = column[String]("IMDB_ID", O.PrimaryKey)
-    def season = column[Int]("SEASON")
-    def number = column[Int]("NUMBER")
-    def seriesImdbId = column[String]("SERIES_IMDB_ID")
-    def * = (imdbID, season, number, seriesImdbId) <> (Episode.tupled, Episode.unapply)
-  }
-
-  object episodes extends TableQuery(new Episodes(_))
+  object titles extends TableQuery(new Titles(_))
 
   class Subtitles(tag: Tag) extends Table[SubtitleDao](tag, "SUBTITLES") {
     def id = column[String]("ID", O.PrimaryKey)
@@ -115,7 +105,7 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
 
   object imovie extends TableQuery(new IMovies(_))
 
-  val tables = Seq(movies, subtitles, episodes, downloads, imovie)
+  val tables = Seq(titles, subtitles, downloads, imovie)
 
   def createStatements = tables.map(_.ddl.createStatements.mkString("\n"))
 }

@@ -17,13 +17,9 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
   def initializeDatabase() {
     database withSession { implicit s =>
-      if(!MTable.getTables.list.exists(_.name.name == movies.shaped.value.tableName)) {
-        logger.info(movies.ddl.createStatements.mkString("\n"))
-        movies.ddl.create
-      }
-      if(!MTable.getTables.list.exists(_.name.name == episodes.shaped.value.tableName)) {
-        logger.info(episodes.ddl.createStatements.mkString("\n"))
-        episodes.ddl.create
+      if(!MTable.getTables.list.exists(_.name.name == titles.shaped.value.tableName)) {
+        logger.info(titles.ddl.createStatements.mkString("\n"))
+        titles.ddl.create
       }
       if(!MTable.getTables.list.exists(_.name.name == subtitles.shaped.value.tableName)) {
         logger.info(subtitles.ddl.createStatements.mkString("\n"))
@@ -64,7 +60,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def saveMovie(m: Movie) {
     if (findMovieById(m.imdbID).isEmpty) {
       database withSession { implicit s =>
-        movies.insert(daoFromTitle(m))
+        titles.insert(daoFromTitle(m))
       }
     }
   }
@@ -72,14 +68,14 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def saveSeries(s: SeriesTitle): Unit = {
     if (findSeriesById(s.imdbID).isEmpty) {
       database withSession { implicit session =>
-        movies.insert(daoFromTitle(s))
+        titles.insert(daoFromTitle(s))
       }
     }
   }
 
   override def deleteMovie(imdbId: String): Int = {
     database withTransaction { implicit t =>
-      movies.filter(_.imdbId === imdbId).delete
+      titles.filter(_.imdbId === imdbId).delete
     }
   }
 
@@ -96,14 +92,14 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
   override def listMovies(): List[Movie] = {
     database withSession { implicit s =>
-      val q = movies.filter(_.movieType === MovieType.discriminator)
+      val q = titles.filter(_.movieType === MovieType.discriminator)
       q.list.map(movieFromDao)
     }
   }
 
   override def listSeries(): List[SeriesTitle] = {
     database.withSession { implicit s =>
-      movies.filter(_.movieType === Series.discriminator).list.map(seriesFromDao)
+      titles.filter(_.movieType === Series.discriminator).list.map(seriesFromDao)
     }
   }
 
@@ -116,7 +112,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def findMovieById(imdbId: String): Option[Movie] = {
     database withSession { implicit s =>
       val q = for {
-        m <- movies if m.imdbId === imdbId && m.movieType === MovieType.discriminator
+        m <- titles if m.imdbId === imdbId && m.movieType === MovieType.discriminator
       } yield m
       q.list.headOption.map(movieFromDao)
     }
@@ -124,14 +120,14 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
   override def findTitleById(imdbId: String): Option[Title] = {
     database withSession { implicit s =>
-      val q = movies.filter(_.imdbId === imdbId)
+      val q = titles.filter(_.imdbId === imdbId)
       q.list.headOption.map(titleFromDao)
     }
   }
 
   override def findSeriesById(imdbId: String): Option[SeriesTitle] = {
     database withSession { implicit s =>
-      val q = movies.filter(m => m.imdbId === imdbId && m.movieType === Series.discriminator)
+      val q = titles.filter(m => m.imdbId === imdbId && m.movieType === Series.discriminator)
       q.list.headOption.map(seriesFromDao)
     }
   }
@@ -181,7 +177,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def saveEpisode(episode: Episode) {
     if (findEpisodeById(episode.imdbID).isEmpty) {
       database withSession { implicit s =>
-        movies.insert(daoFromTitle(episode))
+        titles.insert(daoFromTitle(episode))
       }
     }
   }
@@ -189,7 +185,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def findEpisodeForSeries(imdbId: String, seasonNumber: Int, episodeNumber: Int): Option[Episode] = {
     database withSession { implicit s =>
       val q = for {
-        e <- movies if e.seriesImdbId === imdbId && e.season === seasonNumber && e.number === episodeNumber
+        e <- titles if e.seriesImdbId === imdbId && e.season === seasonNumber && e.number === episodeNumber
       } yield e
       q.list.headOption.map(episodeFromDao)
     }
@@ -198,7 +194,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def findEpisodeById(id: String): Option[Episode] = {
     database withSession { implicit s =>
       val q = for {
-        e <- movies if e.imdbId === id
+        e <- titles if e.imdbId === id
       } yield e
       q.list.headOption.map(episodeFromDao)
     }
@@ -215,7 +211,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def findEpisodesForSeries(imdbId: String): List[Episode] = {
     database withSession { implicit s =>
       val q = for {
-        e <- movies if e.seriesImdbId === imdbId
+        e <- titles if e.seriesImdbId === imdbId
       } yield e
       q.list.map(episodeFromDao)
     }
