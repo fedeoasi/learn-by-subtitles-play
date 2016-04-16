@@ -84,14 +84,14 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   }
 
   def daoFromTitle(t: Title) = {
-    val mt = if(t.isSimpleMovie) {
-      MovieType
-    } else if(t.isSeries) {
-      Series
-    } else {
-      throw new IllegalStateException("Unknown movie type")
+    t match {
+      case m: Movie =>
+        TitleDao(m.imdbID, Some(m.year), Some(m.title), MovieType.discriminator, Some(m.posterUrl), None, None, None, m.id)
+      case s: SeriesTitle =>
+        TitleDao(s.imdbID, Some(s.year), Some(s.title), Series.discriminator, Some(s.posterUrl), None, None, None, s.id)
+      case e: Episode =>
+        TitleDao(t.imdbID, None, None, EpisodeType.discriminator, None, Some(e.season), Some(e.number), Some(e.seriesImdbId), None)
     }
-    MovieDao(t.imdbID, t.year, t.title, mt.discriminator, t.posterUrl, None)
   }
 
   override def listMovies(): List[Movie] = {
@@ -136,13 +136,14 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
   
-  private def movieFromDao(d: MovieDao): Movie = Movie(d.imdbID, d.year, d.title, d.posterUrl, d.id)
-  private def seriesFromDao(d: MovieDao): SeriesTitle = SeriesTitle(d.imdbID, d.year, d.title, d.posterUrl, d.id)
+  private def movieFromDao(d: TitleDao): Movie = Movie(d.imdbID, d.year.get, d.title.get, d.posterUrl.get, d.id)
+  private def seriesFromDao(d: TitleDao): SeriesTitle = SeriesTitle(d.imdbID, d.year.get, d.title.get, d.posterUrl.get, d.id)
 
-  private def titleFromDao(m: MovieDao): Title = {
+  private def titleFromDao(m: TitleDao): Title = {
     TitleType.typesByDiscriminator(m.movieType) match {
-      case MovieType => Movie(m.imdbID, m.year, m.title, m.posterUrl, m.id)
-      case Series => SeriesTitle(m.imdbID, m.year, m.title, m.posterUrl, m.id)
+      case MovieType => Movie(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
+      case Series => SeriesTitle(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
+      case EpisodeType => Episode(m.imdbID, m.season.get, m.number.get, m.seriesImdbId.get)
     }
   }
 
@@ -180,7 +181,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def saveEpisode(episode: Episode) {
     if (findEpisodeById(episode.imdbID).isEmpty) {
       database withSession { implicit s =>
-        episodes.insert(episode)
+        movies.insert(daoFromTitle(episode))
       }
     }
   }
@@ -188,19 +189,23 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def findEpisodeForSeries(imdbId: String, seasonNumber: Int, episodeNumber: Int): Option[Episode] = {
     database withSession { implicit s =>
       val q = for {
-        e <- episodes if e.seriesImdbId === imdbId && e.season === seasonNumber && e.number === episodeNumber
+        e <- movies if e.seriesImdbId === imdbId && e.season === seasonNumber && e.number === episodeNumber
       } yield e
-      q.list.headOption
+      q.list.headOption.map(episodeFromDao)
     }
   }
 
   override def findEpisodeById(id: String): Option[Episode] = {
     database withSession { implicit s =>
       val q = for {
-        e <- episodes if e.imdbID === id
+        e <- movies if e.imdbId === id
       } yield e
-      q.list.headOption
+      q.list.headOption.map(episodeFromDao)
     }
+  }
+
+  def episodeFromDao(dao: TitleDao): Episode = {
+    Episode(dao.imdbID, dao.season.get, dao.number.get, dao.seriesImdbId.get)
   }
 
   def episodeFromTuple(episode: (String, Int, Int, String)): Episode = {
@@ -210,16 +215,20 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def findEpisodesForSeries(imdbId: String): List[Episode] = {
     database withSession { implicit s =>
       val q = for {
-        e <- episodes if e.seriesImdbId === imdbId
+        e <- movies if e.seriesImdbId === imdbId
       } yield e
-      q.list
+      q.list.map(episodeFromDao)
     }
   }
 
   override def findEpisodesWithNoSubtitles(): List[Episode] = {
     database withSession { implicit s =>
-      StaticQuery.queryNA[(String, Int, Int, String)]("select * from EPISODES e where e.IMDB_ID not in " +
-        "(select IMDB_ID from SUBTITLES)").list.map(Episode.tupled)
+      val query = "select IMDB_ID, SEASON, NUMBER, SERIES_IMDB_ID from TITLES e " +
+        "where e.MOVIE_TYPE = 'e' and e.IMDB_ID not in (select IMDB_ID from SUBTITLES)"
+      StaticQuery.queryNA[(String, Option[Int], Option[Int], Option[String])](query).list.map {
+        case (imdbId, season, number, seriesImdbId) =>
+          Episode(imdbId, season.get, number.get, seriesImdbId.get)
+      }
     }
   }
 
@@ -265,15 +274,18 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def titlesByImdbId(imdbIds: Seq[String]): Map[String, String] = {
     imdbIds.map { imdbId =>
       findTitleById(imdbId) match {
-        case Some(m) => imdbId -> m.title
-        case None =>
-          findEpisodeById(imdbId) match {
-            case Some(e) => imdbId -> {
+        case Some(title) =>
+          title match {
+            case m: Movie =>
+              imdbId -> m.title
+            case s: SeriesTitle =>
+              imdbId -> s.title
+            case e: Episode =>
               val series = findSeriesById(e.seriesImdbId).get
-              series.title + " s" + e.season + "e" + e.number
-            }
-            case None => throw new IllegalArgumentException("No movies or episodes with imdbId " + imdbId)
+              val title = series.title + " s" + e.season + "e" + e.number
+              imdbId -> title
           }
+        case None => throw new IllegalArgumentException(s"Could not find title with imdbId $imdbId")
       }
     }.toMap
   }

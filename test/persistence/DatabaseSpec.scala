@@ -121,21 +121,21 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager wit
     }
 
     it("should be able to save an episode") {
-      val episode =  Episode("imdbId", 1, 1, "seriesId")
+      val episode =  Episode("eimdbId", 1, 1, "seriesId")
       persistenceManager.saveEpisode(episode)
       val returnedMovie = persistenceManager.findEpisodeById(episode.imdbID)
       returnedMovie should be(Some(episode))
     }
 
     it("should not error out when adding an existing movie") {
-      val episode =  Episode("imdbId", 1, 1, "seriesId")
+      val episode =  Episode("eimdbId", 1, 1, "seriesId")
       persistenceManager.saveEpisode(episode)
       val returnedMovie = persistenceManager.findEpisodeById(episode.imdbID)
       returnedMovie should be(Some(episode))
     }
 
     it("should find an episode by series id, season, and episode number") {
-      val episode =  Episode("imdbId", 1, 1, "seriesId")
+      val episode =  Episode("eimdbId", 1, 1, "seriesId")
       persistenceManager.saveEpisode(episode)
       val series = SeriesTitle("seriesId", 2000, "my series", "http://blabla", None)
       val returnedMovie = persistenceManager.findEpisodeForSeries(series.imdbID, 1, 1)
@@ -143,14 +143,14 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager wit
     }
 
     it("should list the episodes with no subtitles") {
-      val episode1 =  Episode("imdbId", 1, 1, "seriesId")
+      val episode1 =  Episode("eimdbId", 1, 1, "seriesId")
       persistenceManager.saveEpisode(episode1)
-      val episode2 =  Episode("imdbId2", 1, 2, "seriesId")
+      val episode2 =  Episode("eimdbId2", 1, 2, "seriesId")
       persistenceManager.saveEpisode(episode2)
-      val episode3 =  Episode("imdbId3", 1, 3, "seriesId")
+      val episode3 =  Episode("eimdbId3", 1, 3, "seriesId")
       persistenceManager.saveEpisode(episode3)
 
-      persistenceManager.saveSubtitle(Subtitle("idForListingEpisodes", "imdbId2"))
+      persistenceManager.saveSubtitle(Subtitle("idForListingEpisodes", "eimdbId2"))
       val episodesToProcess: List[Episode] = persistenceManager.findEpisodesWithNoSubtitles()
       episodesToProcess.size should be(2)
       episodesToProcess should contain(episode1)

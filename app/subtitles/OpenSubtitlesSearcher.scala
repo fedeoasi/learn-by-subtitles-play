@@ -16,6 +16,8 @@ import config.Config
 import java.lang
 import persistence.PersistenceManager
 
+import scala.util.control.NonFatal
+
 trait SubtitleSearcher {
   def searchSubtitles(imdbId: String): String
   def downloadSubtitle(id: String): Option[String]
@@ -116,7 +118,7 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
 
     val groupedBySeason = converted.groupBy { c =>
       c.getOrElse("SeriesSeason", "0").toInt
-    }.filterKeys(k => k != 0)
+    }.filterKeys(_ != 0)
 
     val episodeList = mutable.Set[Episode]()
     val seasons: List[Season] =
@@ -193,7 +195,7 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
     try {
       candidates.map(asJavaStringMap(_).toMap)
     } catch {
-      case e: Throwable =>
+      case NonFatal(e) =>
         logger.error(s"Unable to process open subtitle results for imdbId: $imdbId")
         Array.empty[immutable.Map[String, String]]
     }

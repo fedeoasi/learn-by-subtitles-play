@@ -30,7 +30,15 @@ trait DBComponent {
 //  }
 }
 
-case class MovieDao(imdbID: String, year: Int, title: String, movieType: String, posterUrl: String, id: Option[Int])
+case class TitleDao(imdbID: String,
+                    year: Option[Int],
+                    title: Option[String],
+                    movieType: String,
+                    posterUrl: Option[String],
+                    season: Option[Int],
+                    number: Option[Int],
+                    seriesImdbId: Option[String],
+                    id: Option[Int])
 case class SubtitleDao(id: String, imdbId: String, indexed: Boolean)
 
 trait LearnBySubtitlesDbComponent extends DBComponent {
@@ -45,25 +53,19 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
     )
   }
 
-  class Movies(tag: Tag) extends TableWithId[MovieDao](tag, "MOVIES") {
+  class Titles(tag: Tag) extends TableWithId[TitleDao](tag, "TITLES") {
     def imdbId = column[String]("IMDB_ID")
-    def title = column[String]("TITLE")
-    def year = column[Int]("YEAR")
+    def title = column[Option[String]]("TITLE")
+    def year = column[Option[Int]]("YEAR")
     def movieType = column[String]("MOVIE_TYPE")
-    def posterUrl = column[String]("POSTER_URL")
-    def * = (imdbId, year, title, movieType, posterUrl, id.?) <> (MovieDao.tupled, MovieDao.unapply)
+    def posterUrl = column[Option[String]]("POSTER_URL")
+    def season = column[Option[Int]]("SEASON")
+    def number = column[Option[Int]]("NUMBER")
+    def seriesImdbId = column[Option[String]]("SERIES_IMDB_ID")
+    def * = (imdbId, year, title, movieType, posterUrl, season, number, seriesImdbId, id.?) <> (TitleDao.tupled, TitleDao.unapply)
   }
 
-  object movies extends TableQuery(new Movies(_))
-
-  class Subtitles(tag: Tag) extends Table[SubtitleDao](tag, "SUBTITLES") {
-    def id = column[String]("ID", O.PrimaryKey)
-    def imdbId = column[String]("IMDB_ID")
-    def indexed = column[Boolean]("INDEXED")
-    def * = (id, imdbId, indexed) <> (SubtitleDao.tupled, SubtitleDao.unapply)
-  }
-
-  object subtitles extends TableQuery(new Subtitles(_))
+  object movies extends TableQuery(new Titles(_))
 
   class Episodes(tag:Tag) extends Table[Episode](tag, "EPISODES") {
     def imdbID = column[String]("IMDB_ID", O.PrimaryKey)
@@ -74,6 +76,15 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
   }
 
   object episodes extends TableQuery(new Episodes(_))
+
+  class Subtitles(tag: Tag) extends Table[SubtitleDao](tag, "SUBTITLES") {
+    def id = column[String]("ID", O.PrimaryKey)
+    def imdbId = column[String]("IMDB_ID")
+    def indexed = column[Boolean]("INDEXED")
+    def * = (id, imdbId, indexed) <> (SubtitleDao.tupled, SubtitleDao.unapply)
+  }
+
+  object subtitles extends TableQuery(new Subtitles(_))
 
   case class Download(time: DateTime)
 
