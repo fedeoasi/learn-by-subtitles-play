@@ -157,8 +157,8 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
     val responseMap = asAnyRefMap(response)
     responseMap.get("data") match {
       case bool: lang.Boolean if !bool =>
-        logger.error("Something went wrong when downloading the subtitle with subId:" + id + ".\n" +
-          "We might have exceeded the download limit")
+        logger.error(s"Something went wrong when downloading the subtitle with subId: $id.\n" +
+          s"We might have exceeded the download limit: ${responseMap.get("status")}")
         None
       case array: Array[Object] =>
         val dataString = asAnyRefMap(array(0))

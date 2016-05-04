@@ -9,7 +9,6 @@ class SubtitleIndexingTask(persistenceManager: PersistenceManager,
                            searchInteractor:  SearchInteractor,
                            index: String) extends Runnable with Logging {
   def run() {
-    logger.debug("Finding subtitles to index")
     val toBeIndexed = persistenceManager.findSubtitlesToIndex()
     if (toBeIndexed.nonEmpty) {
       logger.info(s"Files to be indexed: $toBeIndexed")
