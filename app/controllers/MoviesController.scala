@@ -2,14 +2,15 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import model.{Series, Movie, Title}
+import model.{Movie, Series, Title}
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.{Action, Controller}
+import serialization.JsonFormats
 
 @Singleton
 class MoviesController @Inject()(persistenceManager: PersistenceManager) extends Controller {
-  implicit val formats = org.json4s.DefaultFormats
+  implicit val formats = JsonFormats
 
   def viewMovie = Action {
     Ok(views.html.movie())

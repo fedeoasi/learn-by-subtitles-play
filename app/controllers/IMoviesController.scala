@@ -7,6 +7,7 @@ import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.{Action, Controller}
 import search.{SearchInteractor, SuggestionResult}
+import serialization.JsonFormats
 import subtitles.SeriesDetailProvider
 
 @Singleton
@@ -15,7 +16,7 @@ class IMoviesController @Inject()(searchInteractor: SearchInteractor,
                                   seriesDetailProvider: SeriesDetailProvider)
   extends Controller {
 
-  implicit val formats = org.json4s.DefaultFormats
+  implicit val formats = JsonFormats
 
   def imovie(id: Int) = Action {
     persistenceManager.findIMovieById(id) match {

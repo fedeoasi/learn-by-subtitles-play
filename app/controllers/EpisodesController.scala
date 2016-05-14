@@ -5,10 +5,11 @@ import model.{Episode, Series}
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.{Action, Controller}
+import serialization.JsonFormats
 
 @Singleton
 class EpisodesController @Inject() (persistenceManager: PersistenceManager) extends Controller {
-  implicit val formats = org.json4s.DefaultFormats
+  implicit val formats = JsonFormats
 
   def viewEpisodes(imdbId: String) = Action {
     Ok(views.html.episodes(imdbId))

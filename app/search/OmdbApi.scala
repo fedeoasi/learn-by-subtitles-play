@@ -6,6 +6,7 @@ import logging.Logging
 import model.{Movie, Title, TitleType}
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import serialization.JsonFormats
 
 trait MovieSearcher {
   def searchTitleJson(title: String): String
@@ -13,7 +14,7 @@ trait MovieSearcher {
 }
 
 class OmdbApi extends MovieSearcher with Logging {
-  implicit val formats = DefaultFormats + new TitleTypeSerializer
+  implicit val formats = JsonFormats + new TitleTypeSerializer
 
   def searchTitleJson(title: String): String = {
     val request = url("http://www.omdbapi.com") <<? Map("t" -> title)
