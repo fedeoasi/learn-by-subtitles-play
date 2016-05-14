@@ -1,8 +1,10 @@
 package controllers
 
+import java.text.SimpleDateFormat
 import javax.inject.{Inject, Singleton}
 
 import config.Config
+import org.json4s.DefaultFormats
 import parsing.SrtParser
 import persistence.PersistenceManager
 import play.api.mvc.{Action, Controller}
@@ -15,7 +17,13 @@ class SearchController @Inject() (parser: SrtParser,
                                   searchInteractor: SearchInteractor)
   extends Controller {
 
-  implicit val formats = org.json4s.DefaultFormats
+  implicit val formats = new DefaultFormats {
+    override protected def dateFormatter: SimpleDateFormat = {
+      val f = new SimpleDateFormat("HH:mm:ss.SSS")
+      f.setTimeZone(DefaultFormats.UTC)
+      f
+    }
+  }
 
   def viewSearch = Action {
     Ok(views.html.search())
