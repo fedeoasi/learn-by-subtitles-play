@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import model.{SeriesTitle, Movie, Title}
+import model.{Series, Movie, Title}
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.{Action, Controller}
@@ -45,7 +45,7 @@ class MoviesController @Inject()(persistenceManager: PersistenceManager) extends
     }
   }
 
-  private def serializeSeries(series: List[SeriesTitle]): List[SerializedTitle] = {
+  private def serializeSeries(series: List[Series]): List[SerializedTitle] = {
     series.map { s =>
       val posterUrl = "<img src='" + s.posterUrl + "' />"
       SerializedTitle(s.imdbID, s.year, s.title, posterUrl)

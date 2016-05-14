@@ -65,7 +65,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
 
-  override def saveSeries(s: SeriesTitle): Unit = {
+  override def saveSeries(s: Series): Unit = {
     if (findSeriesById(s.imdbID).isEmpty) {
       database withSession { implicit session =>
         titles.insert(daoFromTitle(s))
@@ -83,8 +83,8 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     t match {
       case m: Movie =>
         TitleDao(m.imdbID, Some(m.year), Some(m.title), MovieType.discriminator, Some(m.posterUrl), None, None, None, m.id)
-      case s: SeriesTitle =>
-        TitleDao(s.imdbID, Some(s.year), Some(s.title), Series.discriminator, Some(s.posterUrl), None, None, None, s.id)
+      case s: Series =>
+        TitleDao(s.imdbID, Some(s.year), Some(s.title), SeriesType.discriminator, Some(s.posterUrl), None, None, None, s.id)
       case e: Episode =>
         TitleDao(t.imdbID, None, None, EpisodeType.discriminator, None, Some(e.season), Some(e.number), Some(e.seriesImdbId), None)
     }
@@ -97,9 +97,9 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
 
-  override def listSeries(): List[SeriesTitle] = {
+  override def listSeries(): List[Series] = {
     database.withSession { implicit s =>
-      titles.filter(_.movieType === Series.discriminator).list.map(seriesFromDao)
+      titles.filter(_.movieType === SeriesType.discriminator).list.map(seriesFromDao)
     }
   }
 
@@ -125,20 +125,20 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
 
-  override def findSeriesById(imdbId: String): Option[SeriesTitle] = {
+  override def findSeriesById(imdbId: String): Option[Series] = {
     database withSession { implicit s =>
-      val q = titles.filter(m => m.imdbId === imdbId && m.movieType === Series.discriminator)
+      val q = titles.filter(m => m.imdbId === imdbId && m.movieType === SeriesType.discriminator)
       q.list.headOption.map(seriesFromDao)
     }
   }
   
   private def movieFromDao(d: TitleDao): Movie = Movie(d.imdbID, d.year.get, d.title.get, d.posterUrl.get, d.id)
-  private def seriesFromDao(d: TitleDao): SeriesTitle = SeriesTitle(d.imdbID, d.year.get, d.title.get, d.posterUrl.get, d.id)
+  private def seriesFromDao(d: TitleDao): Series = Series(d.imdbID, d.year.get, d.title.get, d.posterUrl.get, d.id)
 
   private def titleFromDao(m: TitleDao): Title = {
     TitleType.typesByDiscriminator(m.movieType) match {
       case MovieType => Movie(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
-      case Series => SeriesTitle(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
+      case SeriesType => Series(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
       case EpisodeType => Episode(m.imdbID, m.season.get, m.number.get, m.seriesImdbId.get)
     }
   }
@@ -274,7 +274,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
           title match {
             case m: Movie =>
               imdbId -> m.title
-            case s: SeriesTitle =>
+            case s: Series =>
               imdbId -> s.title
             case e: Episode =>
               val series = findSeriesById(e.seriesImdbId).get

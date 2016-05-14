@@ -1,7 +1,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import model.{Episode, SeriesTitle}
+import model.{Episode, Series}
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.{Action, Controller}
@@ -25,4 +25,4 @@ class EpisodesController @Inject() (persistenceManager: PersistenceManager) exte
   }
 }
 
-case class EpisodesResponse(series: SeriesTitle, episodes: List[Episode])
+case class EpisodesResponse(series: Series, episodes: List[Episode])

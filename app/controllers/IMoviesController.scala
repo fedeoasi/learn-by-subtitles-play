@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import model.{EpisodeType, IMovie, MovieType, Series}
+import model.{EpisodeType, IMovie, MovieType, SeriesType}
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.{Action, Controller}
@@ -51,7 +51,7 @@ class IMoviesController @Inject()(searchInteractor: SearchInteractor,
           case MovieType =>
             persistenceManager.saveIMovieAsMovie(imovie)
             Ok("""{"info":"Movie is now part of the collection"}""").as(JSON)
-          case Series =>
+          case SeriesType =>
             seriesDetailProvider.get(imovie.imdbId.get)
             persistenceManager.saveIMovieAsSeries(imovie)
             Ok("""{"info":"Series is now part of the collection"}""").as(JSON)

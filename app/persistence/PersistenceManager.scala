@@ -9,10 +9,10 @@ trait TitlePersistence {
   def findMovieById(imdbId: String): Option[Movie]
   def deleteMovie(imdbId: String): Int
   def listMovies(): List[Movie]
-  def saveSeries(movie: SeriesTitle)
-  def findSeriesById(imdbId: String): Option[SeriesTitle]
+  def saveSeries(movie: Series)
+  def findSeriesById(imdbId: String): Option[Series]
   //TODO Deletion for Series?
-  def listSeries(): List[SeriesTitle]
+  def listSeries(): List[Series]
   def saveEpisode(episode: Episode)
   def findEpisodeForSeries(imdbId: String, seasonNumber: Int, episodeNumber: Int): Option[Episode]
   def findEpisodesForSeries(imdbId: String): List[Episode]

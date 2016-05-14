@@ -10,7 +10,7 @@ class NoopPersistenceManager extends PersistenceManager {
 
   override def listMovies(): List[Movie] = List[Movie]()
 
-  override def listSeries(): List[SeriesTitle] = ???
+  override def listSeries(): List[Series] = ???
 
   override def deleteMovie(imdbId: String): Int = ???
 
@@ -52,9 +52,9 @@ class NoopPersistenceManager extends PersistenceManager {
 
   override def saveIMovieAsSeries(series: IMovie): Boolean = ???
 
-  override def findSeriesById(imdbId: String): Option[SeriesTitle] = ???
+  override def findSeriesById(imdbId: String): Option[Series] = ???
 
-  override def saveSeries(movie: SeriesTitle): Unit = ???
+  override def saveSeries(movie: Series): Unit = ???
 
   override def findTitleById(imdbId: String): Option[Title] = ???
 }

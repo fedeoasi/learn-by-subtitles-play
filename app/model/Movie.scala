@@ -14,7 +14,7 @@ case class Movie(imdbID: String, year: Int, title: String, posterUrl: String, id
   def isSimpleMovie: Boolean = true
 }
 
-case class SeriesTitle(imdbID: String, year: Int, title: String, posterUrl: String, id: Option[Int]) extends Title {
+case class Series(imdbID: String, year: Int, title: String, posterUrl: String, id: Option[Int]) extends Title {
   def isSeries: Boolean = true
   def isSimpleMovie: Boolean = false
 }
@@ -33,14 +33,14 @@ case class IMovie(otherId: Long, title: String, year: Int, rating: BigDecimal, v
   def toTitle: Title = {
     titleType match {
       case MovieType => Movie(imdbId.get, year, title, poster, None)
-      case Series => SeriesTitle(imdbId.get, year, title, poster, None)
+      case SeriesType => Series(imdbId.get, year, title, poster, None)
       case EpisodeType => throw new IllegalArgumentException
     }
   }
 
-  def toSeries: SeriesTitle = {
-    require(titleType == Series)
-    SeriesTitle(imdbId.get, year, title, poster, None)
+  def toSeries: Series = {
+    require(titleType == SeriesType)
+    Series(imdbId.get, year, title, poster, None)
   }
 }
 
@@ -52,7 +52,7 @@ sealed trait TitleType {
 object TitleType {
   def apply(s: String): TitleType = typesByDiscriminator(s)
 
-  val types = Set(MovieType, Series, EpisodeType)
+  val types = Set(MovieType, SeriesType, EpisodeType)
   val typesByDiscriminator: Map[String, TitleType] = types.flatMap {
     t => Seq(t.discriminator -> t, t.name -> t)
   }.toMap
@@ -62,7 +62,7 @@ case object MovieType extends TitleType {
   override def discriminator: String = "m"
   override def name: String = "movie"
 }
-case object Series extends TitleType {
+case object SeriesType extends TitleType {
   override def discriminator: String = "s"
   override def name: String = "series"
 }
