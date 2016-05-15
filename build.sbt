@@ -14,7 +14,8 @@ val webJars = {
   val jQuery = "org.webjars" % "jquery" % "2.1.4"
   val datatables = "org.webjars" % "datatables" % "1.10.9"
   val datatablesTools = "org.webjars" % "datatables-tools" % "2.2.4-1"
-  Seq(handlebars, jQuery, datatables, datatablesTools)
+  val d3Cloud = "org.webjars" % "d3-cloud" % "1.0.5"
+  Seq(handlebars, jQuery, datatables, datatablesTools, d3Cloud)
 }
 
 lazy val flyway = "org.flywaydb" % "flyway-core" % "3.2.1"
