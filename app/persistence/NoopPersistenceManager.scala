@@ -44,6 +44,8 @@ class NoopPersistenceManager extends PersistenceManager {
 
   override def saveIMovie(movie: IMovie): Unit = ???
 
+  override def saveIMovies(movie: Seq[IMovie]): Unit = ???
+
   override def titlesByImdbId(imdbIds: Seq[String]): Map[String, String] = ???
 
   override def findIMovieById(id: Int): Option[IMovie] = ???

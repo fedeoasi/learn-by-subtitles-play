@@ -29,7 +29,16 @@ case class Season(parentImdbID: String, seasonNumber: Int, episodes: Int)
 case class SubEntry(number: Int, start: Date, stop: Date, text: String)
 case class Subtitle(id: String, imdbId: String)
 case class SubtitleWithContent(subtitle: Subtitle, content: String)
-case class IMovie(otherId: Long, title: String, year: Int, rating: BigDecimal, votes: Long, genre: String, poster: String, titleType: TitleType, imdbId: Option[String]) {
+case class IMovie(otherId: Long,
+                  title: String,
+                  year: Int,
+                  rating: BigDecimal,
+                  votes: Long,
+                  score: BigDecimal,
+                  genre: String,
+                  poster: String,
+                  titleType: TitleType,
+                  imdbId: Option[String]) {
   def toTitle: Title = {
     titleType match {
       case MovieType => Movie(imdbId.get, year, title, poster, None)

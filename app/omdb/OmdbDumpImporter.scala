@@ -42,11 +42,23 @@ object OmdbDumpImporter {
       val titleType = values(indexByField(Type))
       OmdbTitle(id, imdbId, title, year, runtime, genre, imdbRating, imdbVotes, poster, titleType)
     }
-    titles.foreach { om =>
-      if (om.imdbRating.isDefined && om.imdbVotes.isDefined) {
-        pm.saveIMovie(IMovie(om.id, om.title, om.year, BigDecimal(om.imdbRating.get), om.imdbVotes.get, om.genre, om.poster, TitleType(om.titleType), Some(om.imdbId)))
-      }
+    val moviesWithImdbVotes = titles.filter { om =>
+      om.imdbRating.isDefined && om.imdbVotes.isDefined
+    }.toSeq
+
+    val avgVote = computeAverageVote(moviesWithImdbVotes)
+    println(s"The average vote is $avgVote")
+    val imoviesToInsert = moviesWithImdbVotes.map { om =>
+      val score = TitleScorer.computeScore(om, avgVote)
+      IMovie(om.id, om.title, om.year, BigDecimal(om.imdbRating.get), om.imdbVotes.get, score, om.genre, om.poster, TitleType(om.titleType), Some(om.imdbId))
     }
+    pm.saveIMovies(imoviesToInsert)
+  }
+
+  def computeAverageVote(titles: Seq[OmdbTitle]): BigDecimal = {
+    val weightedSum = titles.map { m => m.imdbRating.get * m.imdbVotes.get }.sum
+    val sumOfWeigths = titles.map { m => m.imdbVotes.get }.sum
+    BigDecimal(weightedSum) / sumOfWeigths
   }
 
   def printTopK(titles: Array[OmdbTitle]): Unit = {

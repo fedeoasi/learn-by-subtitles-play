@@ -254,8 +254,13 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
 
+  override def saveIMovies(movies: Seq[IMovie]): Unit = {
+    database withTransaction { implicit s =>
+      movies.foreach(imovie.insert)
+    }
+  }
+
   override def saveIMovie(movie: IMovie): Unit = {
-    //TODO incremental approach
     database withSession { implicit s =>
       imovie.insert(movie)
     }

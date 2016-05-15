@@ -96,11 +96,12 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
     def year = column[Int]("YEAR")
     def rating = column[BigDecimal]("RATING")
     def votes = column[Long]("VOTES")
+    def score = column[BigDecimal]("SCORE")
     def genre = column[String]("GENRE")
     def poster = column[String]("POSTER")
     def imdbId = column[String]("IMDB_ID")
     def titleType = column[TitleType]("TYPE")
-    def * = (otherId, title, year, rating, votes, genre, poster, titleType, imdbId.?) <> (IMovie.tupled, IMovie.unapply)
+    def * = (otherId, title, year, rating, votes, score, genre, poster, titleType, imdbId.?) <> (IMovie.tupled, IMovie.unapply)
   }
 
   object imovie extends TableQuery(new IMovies(_))

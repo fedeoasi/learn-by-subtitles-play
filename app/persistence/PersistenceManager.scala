@@ -39,6 +39,7 @@ trait SubtitleDownloadPersistence {
 trait IMoviePersistence {
   def listIMovies(): List[IMovie]
   def findIMovieById(id: Int): Option[IMovie]
+  def saveIMovies(movie: Seq[IMovie]): Unit
   def saveIMovie(movie: IMovie): Unit
   def saveIMovieAsMovie(movie: IMovie): Boolean
   def saveIMovieAsSeries(series: IMovie): Boolean

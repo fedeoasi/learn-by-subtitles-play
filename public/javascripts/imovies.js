@@ -13,6 +13,7 @@ $(document).ready(function() {
           { "mData": "year", "sTitle": "Year", "sWidth": "200px" },
           { "mData": "genre", "sTitle": "Genre", "sWidth": "500px" },
           { "mData": "rating", "sTitle": "Rating", "sWidth": "100px" },
+          { "mData": "score", "sTitle": "Score", "sWidth": "100px" },
           { "mData": "votes", "sTitle": "Votes", "sWidth": "100px" },
           { "mData": null, "sTitle": "Search", "mRender": buildLink, "sWidth": "100px", "sClass": "movieAction" }
         ]
