@@ -172,7 +172,7 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
     val subtitleMap = asJavaStringMap(dataArray(0))
     if (!dataArray.isEmpty) {
       val subtitleStringOption = downloadSubtitle(subtitleMap.get("IDSubtitleFile"))
-      persistenceManager.saveSubtitleDownload()
+      subtitleStringOption.foreach(s => persistenceManager.saveSubtitleDownload())
       val subtitleId = subtitleMap.get("IDSubtitle")
       subtitleStringOption.map(SubtitleWithContent(Subtitle(subtitleId, imdbId), _))
     } else {
