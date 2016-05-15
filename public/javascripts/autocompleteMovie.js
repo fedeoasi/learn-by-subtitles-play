@@ -24,7 +24,7 @@ function renderIMovie(movie) {
             ul.append('<li><span class="attrKey">' + p + '</span> - <span class="attrValue">' + movie[p] + '</span></li>');
         }
     }
-    ul.append('<li><button class="redB" onclick="addMovie(' + movie.otherId + ')">Add</button></li>');
+    ul.append('<li><button class="bg-red" onclick="addMovie(' + movie.otherId + ')">Add</button></li>');
     attrDiv.append(ul);
     var movieDiv = $('#movieDiv');
     movieDiv.html('');

@@ -2,7 +2,6 @@ html, body {
     font-family: "Ruda",Arial,sans-serif;
     font-size: 20px;
 	margin: 0;
-	background: #111;
 	height: 100%;
 	color: #bbb;
 }
@@ -11,16 +10,6 @@ html, body {
 	margin-left: 40px;
 	min-height: 100%;
 }
-
-.violetB { background-color: #7627A8 !important; }
-.redB { background-color: #D41414 !important; }
-.yellowB { background-color: #F1C205 !important; }
-.blueB { background-color: #048FAD !important; }
-
-.violetT { color: #7627A8 !important; }
-.redT { color: #D41414 !important; }
-.yellowT { color: #F1C205 !important; }
-.blueT { color: #048FAD !important; }
 
 p { color: #bbb; }
 
@@ -34,17 +23,21 @@ ul.menu {
 ul.menu li {
   float: left; margin: 0 20px 0 0;
 }
-ul.menu li a{
+ul.menu li a {
     position:relative;
     display: block;
     width: 130px;
     height: 78px;
     padding-top: 52px;
     text-transform: uppercase;
-    color: #FFFFFF;
     text-decoration: none;
     text-align: center;
 }
+
+ul.menu li a.menuAction {
+    color: #FFFFFF;
+}
+
 ul.menu li a.title {
     margin-left: 20px;
     padding-top: 30px;

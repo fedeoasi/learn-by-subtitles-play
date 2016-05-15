@@ -40,9 +40,9 @@ function viewResult(index, event) {
 function setResult(index) {
     $.each($('#results div.searchResult'), function(i, elem) {
         if(i == index) {
-            $(elem).addClass('blueB');
+            $(elem).addClass('bg-blue');
         } else {
-            $(elem).removeClass('blueB');
+            $(elem).removeClass('bg-blue');
         }
     });
 }
