@@ -18,7 +18,7 @@ object MovieAndSeriesDumpExporter extends OmdbDumpExporter {
       (values, indexByField) =>
         val optionalVotes = parseOptionalInt(values(indexByField(ImdbVotes)))
         val titleType = values(indexByField(Type))
-        optionalVotes.exists(_ > 1000) && titleType == "movie" || titleType == "series"
+        optionalVotes.exists(_ > 1000) && (titleType == "movie" || titleType == "series")
     }
   }
 }
