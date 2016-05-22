@@ -12,7 +12,7 @@ $(document).ready(function() {
           { "mData": "title", "sTitle": "Title", "sClass": "movieTitle" },
           { "mData": "year", "sTitle": "Year", "sWidth": "200px" },
           { "mData": "imdbID", "sTitle": "Id", "sWidth": "200px" },
-          { "mData": null, "sTitle": "Episodes", "mRender": buildLink, "sWidth": "100px", "sClass": "movieAction" }
+          { "mData": null, "sTitle": "Episodes", "mRender": buildLink, "sWidth": "100px", "sClass": "bg-blue" }
         ]
   });
 });

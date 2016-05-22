@@ -11,7 +11,7 @@ $(document).ready(function() {
         { "mData": "imdbID", "sTitle": "ImdbId" },
         { "mData": "season", "sTitle": "Season" },
         { "mData": "number", "sTitle": "Number" },
-        { "mData": null, "sTitle": "", "mRender": buildLink, "sWidth": "100px", "sClass": "movieAction" }
+        { "mData": null, "sTitle": "", "mRender": buildLink, "sWidth": "100px", "sClass": "bg-blue" }
     ]
   });
 });

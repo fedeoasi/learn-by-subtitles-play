@@ -184,7 +184,17 @@ table.standardTable {
     //border-collapse: collapse;
     width: 100%;
 }
-table.standardTable td {
+
+table.standardTable th {
+    background-color: #171717;
+    color: #0074D9;
+    padding: 6px 8px;
+    text-align: center;
+    margin-top: 50px;
+    border-spacing: 50px;
+}
+
+table.standardTable tr {
     background-color: #171717;
     color: #bbb;
     padding: 6px 8px;
@@ -192,6 +202,7 @@ table.standardTable td {
     margin-top: 50px;
     border-spacing: 50px;
 }
+
 table.standardTable td.first {
     //border-left: 1px solid #048FAD;
 }
@@ -308,10 +319,6 @@ div.searchResult {
 
 .standardTable .movieTitle {
     text-align: left;
-}
-
-table.standardTable td.movieAction {
-    background-color: #048FAD;
 }
 
 .fl { float: left; }

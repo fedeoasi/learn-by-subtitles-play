@@ -15,7 +15,7 @@ $(document).ready(function() {
           { "mData": "rating", "sTitle": "Rating", "sWidth": "100px" },
           { "mData": "score", "sTitle": "Score", "sWidth": "100px" },
           { "mData": "votes", "sTitle": "Votes", "sWidth": "100px" },
-          { "mData": null, "sTitle": "Search", "mRender": buildLink, "sWidth": "100px", "sClass": "movieAction" }
+          { "mData": null, "sTitle": "Search", "mRender": buildLink, "sWidth": "100px", "sClass": "bg-blue" }
         ]
   });
 });
