@@ -34,6 +34,8 @@ trait SubtitleDownloadPersistence {
   def saveSubtitleDownload(): Unit
   def subtitleDownloadsSince(time: DateTime): Int
   def nextAvailableDownload(size: Int, hours: Int): DateTime
+  def saveDownloadError(subtitleId: String, imdbId: String, status: String)
+  def downloadErrorsFor(imdbId: String): Seq[DownloadError]
 }
 
 trait IMoviePersistence {

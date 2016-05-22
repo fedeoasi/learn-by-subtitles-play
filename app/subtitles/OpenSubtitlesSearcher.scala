@@ -20,7 +20,6 @@ import scala.util.control.NonFatal
 
 trait SubtitleSearcher {
   def searchSubtitles(imdbId: String): String
-  def downloadSubtitle(id: String): Option[String]
   def getSubtitleContent(existingSubtitle: Subtitle): String
   def searchSubtitlesOnline(imdbId: String): Option[SubtitleWithContent]
   def getSubtitleCandidates(imdbId: String): Array[Object]
@@ -151,14 +150,16 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
     }
   }
 
-  override def downloadSubtitle(id: String): Option[String] = {
-    logger.info(s"Downloading actual subtitle file for imdbId: $id")
-    val response = client.execute(config, "DownloadSubtitles", Array[AnyRef](token, Array(id)))
+  def downloadSubtitle(subtitleId: String, imdbId: String): Option[String] = {
+    logger.info(s"Downloading actual subtitle file for imdbId: $subtitleId")
+    val response = client.execute(config, "DownloadSubtitles", Array[AnyRef](token, Array(subtitleId)))
     val responseMap = asAnyRefMap(response)
     responseMap.get("data") match {
       case bool: lang.Boolean if !bool =>
-        logger.error(s"Something went wrong when downloading the subtitle with subId: $id.\n" +
-          s"We might have exceeded the download limit: ${responseMap.get("status")}")
+        val status = responseMap.get("status")
+        logger.error(s"Something went wrong when downloading the subtitle with subId: $subtitleId.\n" +
+          s"We might have exceeded the download limit: $status")
+        persistenceManager.saveDownloadError(subtitleId, imdbId, status.toString)
         None
       case array: Array[Object] =>
         val dataString = asAnyRefMap(array(0))
@@ -171,8 +172,8 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
     val dataArray = getSubtitleCandidates(imdbId)
     val subtitleMap = asJavaStringMap(dataArray(0))
     if (!dataArray.isEmpty) {
-      val subtitleStringOption = downloadSubtitle(subtitleMap.get("IDSubtitleFile"))
-      subtitleStringOption.foreach(s => persistenceManager.saveSubtitleDownload())
+      val subtitleStringOption = downloadSubtitle(subtitleMap.get("IDSubtitleFile"), imdbId)
+      subtitleStringOption.foreach(_ => persistenceManager.saveSubtitleDownload())
       val subtitleId = subtitleMap.get("IDSubtitle")
       subtitleStringOption.map(SubtitleWithContent(Subtitle(subtitleId, imdbId), _))
     } else {

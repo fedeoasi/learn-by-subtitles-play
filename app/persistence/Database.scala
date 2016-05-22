@@ -41,6 +41,8 @@ case class TitleDao(imdbID: String,
                     id: Option[Int])
 case class SubtitleDao(id: String, imdbId: String, indexed: Boolean)
 
+case class DownloadError(subtitleId: String, imdbId: String, time: DateTime, reason: String, id: Option[Int])
+
 trait LearnBySubtitlesDbComponent extends DBComponent {
   this: Profile =>
   import driver.simple._
@@ -85,6 +87,16 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
 
   object downloads extends TableQuery(new Downloads(_))
 
+  class DownloadErrors(tag: Tag) extends TableWithId[DownloadError](tag, "DOWNLOAD_ERRORS") {
+    def subtitleId = column[String]("SUBTITLE_ID")
+    def imdbId = column[String]("IMDB_ID")
+    def time = column[DateTime]("TIME")
+    def reason = column[String]("REASON")
+    def * = (subtitleId, imdbId, time, reason, id.?) <> (DownloadError.tupled, DownloadError.unapply)
+  }
+
+  object downloadErrors extends TableQuery(new DownloadErrors(_))
+
   implicit val titleTypeColumnType = MappedColumnType.base[TitleType, String](
     { tt => tt.discriminator },    // map Bool to Int
     { s => TitleType(s) } // map Int to Bool
@@ -106,9 +118,10 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
 
   object imovie extends TableQuery(new IMovies(_))
 
-  val tables = Seq(titles, subtitles, downloads, imovie)
+  val tables = Seq(titles, subtitles, downloads, imovie, downloadErrors)
 
   def createStatements = tables.map(_.ddl.createStatements.mkString("\n"))
+  def create(implicit session: Session): Unit = tables.foreach(_.ddl.create)
 }
 
 class LearnBySubtitlesDAL(override val driver: JdbcDriver) extends LearnBySubtitlesDbComponent with Profile

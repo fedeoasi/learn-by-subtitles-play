@@ -40,6 +40,10 @@ class NoopPersistenceManager extends PersistenceManager {
 
   override def nextAvailableDownload(size: Int, hours: Int): DateTime = ???
 
+  override def saveDownloadError(subtitleId: String, imdbId: String, status: String): Unit = ???
+
+  override def downloadErrorsFor(imdbId: String): Seq[DownloadError] = ???
+
   override def listIMovies(): List[IMovie] = ???
 
   override def saveIMovie(movie: IMovie): Unit = ???

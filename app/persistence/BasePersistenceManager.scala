@@ -17,22 +17,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
   def initializeDatabase() {
     database withSession { implicit s =>
-      if(!MTable.getTables.list.exists(_.name.name == titles.shaped.value.tableName)) {
-        logger.info(titles.ddl.createStatements.mkString("\n"))
-        titles.ddl.create
-      }
-      if(!MTable.getTables.list.exists(_.name.name == subtitles.shaped.value.tableName)) {
-        logger.info(subtitles.ddl.createStatements.mkString("\n"))
-        subtitles.ddl.create
-      }
-      if(!MTable.getTables.list.exists(_.name.name == downloads.shaped.value.tableName)) {
-        logger.info(downloads.ddl.createStatements.mkString("\n"))
-        downloads.ddl.create
-      }
-      if(!MTable.getTables.list.exists(_.name.name == imovie.shaped.value.tableName)) {
-        logger.info(imovie.ddl.createStatements.mkString("\n"))
-        imovie.ddl.create
-      }
+      dal.create
     }
     logger.info("The database has been initialized")
   }
@@ -246,6 +231,19 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
       downloads.sortBy(_.time.desc).take(size).list
     }
     topKDownloads.last.time.plusHours(hours)
+  }
+
+
+  override def saveDownloadError(subtitleId: String, imdbId: String, reason: String): Unit = {
+    database.withSession { implicit s =>
+      downloadErrors.insert(DownloadError(subtitleId, imdbId, DateTime.now, reason, None))
+    }
+  }
+
+  override def downloadErrorsFor(imdbId: String): Seq[DownloadError] = {
+    database.withSession { implicit s =>
+      downloadErrors.filter(_.imdbId === imdbId).run
+    }
   }
 
   override def listIMovies(): List[IMovie] = {

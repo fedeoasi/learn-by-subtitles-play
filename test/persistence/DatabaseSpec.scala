@@ -179,6 +179,16 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager wit
         persistenceManager.saveSubtitleDownload()
         persistenceManager.subtitleDownloadsSince(time) should be(1)
       }
+
+      it("should not find any download error") {
+        persistenceManager.downloadErrorsFor("imdbId") shouldBe Seq.empty
+      }
+
+      it("should add and find a download error") {
+        persistenceManager.saveDownloadError("sId", "imdbId", "Can't find file")
+        persistenceManager.downloadErrorsFor("imdbId").size shouldBe 1
+        persistenceManager.downloadErrorsFor("imdbId2").size shouldBe 0
+      }
     }
   }
 }
