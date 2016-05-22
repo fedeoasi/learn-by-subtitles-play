@@ -8,7 +8,6 @@ import scala.slick.driver.SQLiteDriver
 class ProdPersistenceManager extends BasePersistenceManager with Logging {
   val database = SQLiteDatabaseInitializer.database("lbs")
   override val dal: LearnBySubtitlesDAL = new LearnBySubtitlesDAL(SQLiteDriver)
-  initializeDatabase()
 }
 
 object ProdPersistenceManager{
