@@ -169,15 +169,22 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
   }
 
   private def performSearchOnline(imdbId: String): Option[SubtitleWithContent] = {
+    val previousErrors = persistenceManager.downloadErrorsFor(imdbId)
+    val subtitleIdsToSkip = previousErrors.map(_.subtitleId).toSet
     val dataArray = getSubtitleCandidates(imdbId)
-    val subtitleMap = asJavaStringMap(dataArray(0))
-    if (!dataArray.isEmpty) {
-      val subtitleStringOption = downloadSubtitle(subtitleMap.get("IDSubtitleFile"), imdbId)
+    val optionalSubtitleMap = dataArray.toStream.map(asJavaStringMap).find { stringMap =>
+      val subtitleId = stringMap.get("IDSubtitleFile")
+      val shouldSkip = subtitleIdsToSkip.contains(subtitleId)
+      if (shouldSkip) {
+        logger.info(s"Skipping download of subtitle $subtitleId for imdbId $imdbId")
+      }
+      !shouldSkip
+    }
+    optionalSubtitleMap.flatMap { stringMap =>
+      val subtitleStringOption = downloadSubtitle(stringMap.get("IDSubtitleFile"), imdbId)
       subtitleStringOption.foreach(_ => persistenceManager.saveSubtitleDownload())
-      val subtitleId = subtitleMap.get("IDSubtitle")
+      val subtitleId = stringMap.get("IDSubtitle")
       subtitleStringOption.map(SubtitleWithContent(Subtitle(subtitleId, imdbId), _))
-    } else {
-      None
     }
   }
 
