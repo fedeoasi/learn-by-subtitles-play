@@ -24,7 +24,7 @@ class StatsController @Inject()(persistenceManager: PersistenceManager,
     val seriesCount = persistenceManager.listSeries().size
     val subtitlesToIndexCount = persistenceManager.findSubtitlesToIndex().size
     val episodesWithNoSubtitlesCount = persistenceManager.findEpisodesWithNoSubtitles().size
-    val subtitleCount = persistenceManager.listSubtitles.size
+    val subtitleCount = persistenceManager.listSubtitles().size
     val nextAvailableDownload = subtitleSearcher.nextAvailableDownload
     val latestStats = Stats(
       movieCount,
