@@ -33,3 +33,4 @@ GET     /api/subtitles/:imdbId  controllers.SubtitleController.subtitle(imdbId: 
 GET     /episodes/:imdbId      controllers.EpisodesController.viewEpisodes(imdbId: String)
 GET     /api/episodes/:imdbId  controllers.EpisodesController.episodes(imdbId: String)
 
+GET     /api/stats  controllers.StatsController.stats

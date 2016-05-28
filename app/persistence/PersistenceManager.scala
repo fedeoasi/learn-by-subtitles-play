@@ -22,6 +22,7 @@ trait TitlePersistence {
 }
 
 trait SubtitlePersistence {
+  def listSubtitles(): List[Subtitle]
   def saveSubtitle(subtitle: Subtitle)
   def findSubtitleForMovie(imdbId: String): Option[Subtitle]
   def findSubtitleById(id: String): Option[Subtitle]

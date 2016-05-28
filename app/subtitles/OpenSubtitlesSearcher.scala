@@ -23,6 +23,7 @@ trait SubtitleSearcher {
   def getSubtitleContent(existingSubtitle: Subtitle): String
   def searchSubtitlesOnline(imdbId: String): Option[SubtitleWithContent]
   def getSubtitleCandidates(imdbId: String): Array[Object]
+  def nextAvailableDownload: DateTime
 }
 
 trait SeriesDetailProvider {
@@ -142,12 +143,16 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
   override def searchSubtitlesOnline(imdbId: String): Option[SubtitleWithContent] = {
     val downloadWindow = DateTime.now.minusHours(HOURS_PER_DOWNLOAD_PERIOD)
     if(persistenceManager.subtitleDownloadsSince(downloadWindow) >= MAX_DOWNLOADS_PER_PERIOD) {
-      val next = persistenceManager.nextAvailableDownload(MAX_DOWNLOADS_PER_PERIOD, HOURS_PER_DOWNLOAD_PERIOD)
+      val next = nextAvailableDownload
       logger.info(s"Too many subtitle downloads. Next download opportunity: $next")
       None
     } else {
       performSearchOnline(imdbId)
     }
+  }
+
+  override def nextAvailableDownload: DateTime = {
+    persistenceManager.nextAvailableDownload(MAX_DOWNLOADS_PER_PERIOD, HOURS_PER_DOWNLOAD_PERIOD)
   }
 
   def downloadSubtitle(subtitleId: String, imdbId: String): Option[String] = {

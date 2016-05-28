@@ -24,6 +24,8 @@ class NoopPersistenceManager extends PersistenceManager {
 
   override def markSubtitleAsIndexed(subId: String) {}
 
+  override def listSubtitles(): List[Subtitle] = List[Subtitle]()
+
   override def saveEpisode(episode: Episode) {}
 
   override def findEpisodeForSeries(imdbId: String, seasonNumber: Int, episodeNumber: Int): Option[Episode] = None

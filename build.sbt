@@ -37,6 +37,7 @@ libraryDependencies ++= Seq(
   "com.google.guava" % "guava" % "18.0",
   "mysql" % "mysql-connector-java" % "5.1.32",
   "org.json4s" %% "json4s-jackson" % "3.2.11",
+  "org.json4s" %% "json4s-ext" % "3.2.11",
   "org.codehaus.jackson" % "jackson-core-asl" % "1.9.11",
   "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
   "ch.qos.logback" % "logback-classic" % "1.0.13" % "runtime",
