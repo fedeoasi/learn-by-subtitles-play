@@ -12,8 +12,8 @@ import serialization.JsonFormats
 class MoviesController @Inject()(persistenceManager: PersistenceManager) extends Controller {
   implicit val formats = JsonFormats
 
-  def viewMovie = Action {
-    Ok(views.html.movie())
+  def viewMovie(search: Option[String]) = Action {
+    Ok(views.html.movie(search))
   }
 
   def viewMovies = Action {

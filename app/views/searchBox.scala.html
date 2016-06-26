@@ -1,11 +1,12 @@
-@(newLocation: String)
+@(newLocation: String, initialSearch: Option[String])
 
 @jsimport("jquery.autocomplete-1.2.16.js")
 @jsimport("autocompleteMovie.js")
 
 <div id="search2">
     <div class="form-wrapper cf">
-        <input type="text" id="imdbSearchInput" placeholder="Search here..." required="">
+        <input type="text" id="imdbSearchInput" placeholder="Search here..."
+            required="" value="@initialSearch.getOrElse("")">
         <button type="submit" onclick="something()" class="bg-red">Search</button>
     </div>
 </div>

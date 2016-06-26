@@ -1,10 +1,10 @@
-@()
+@(initialSearch: Option[String])
 
 @main("Add Movie", "purple") {
     @jsimport("subtitleTable.js")
     @jsimport("search.js")
 
-    @searchBox("/movie?title=")
+    @searchBox("/movie?search=", initialSearch)
 
     <div id="movieDiv"></div>
 }

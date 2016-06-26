@@ -21,5 +21,5 @@ $(document).ready(function() {
 });
 
 function buildLink(mData, type, data) {
-    return '<span><a href="/movie?title=' + data.title + '">Search</a></span>';
+    return '<span><a href="/movie?search=' + data.title + '">Search</a></span>';
 }

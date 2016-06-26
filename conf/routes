@@ -19,7 +19,7 @@ GET     /api/imovies/addMovie/:id  controllers.IMoviesController.addMovie(id: In
 GET     /api/imovies               controllers.IMoviesController.imovies()
 GET     /imovies                   controllers.IMoviesController.viewImovies()
 
-GET     /movie               controllers.MoviesController.viewMovie()
+GET     /movie               controllers.MoviesController.viewMovie(search: Option[String])
 GET     /movies              controllers.MoviesController.viewMovies()
 GET     /api/movies          controllers.MoviesController.movies()
 DELETE  /api/movies/:imdbId  controllers.MoviesController.deleteMovie(imdbId: String)
