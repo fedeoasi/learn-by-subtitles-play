@@ -6,19 +6,25 @@ import logging.Logging
 import persistence.PersistenceManager
 import services.SubtitlesService
 
+import scala.util.{Failure, Random, Try}
+
 class EpisodeDownloadingTask @Inject() (persistenceManager: PersistenceManager,
                                         subtitlesController: SubtitlesService)
   extends Runnable with Logging {
 
-  val batchSize = 10
+  val batchSize = 100
 
   def run() {
-    val toBeIndexed = persistenceManager.findEpisodesWithNoSubtitles().take(batchSize)
-    logger.info(s"Files to download subtitles for: $toBeIndexed")
-    toBeIndexed.foreach { s =>
-      logger.info("Downloading subtitles for episode with imdbId: " + s.imdbID)
-      subtitlesController.getSubtitlesForMovie(s.imdbID)
-      Thread.sleep(Config.millisBetweenDownloads)
+    Try {
+      val toBeIndexed = persistenceManager.findEpisodesWithNoSubtitles().take(batchSize)
+      logger.info(s"Files to download subtitles for: $toBeIndexed")
+      Random.shuffle(toBeIndexed).foreach { s =>
+        logger.info("Downloading subtitles for episode with imdbId: " + s.imdbID)
+        subtitlesController.getSubtitlesForMovie(s.imdbID)
+        Thread.sleep(Config.millisBetweenDownloads)
+      }
+    } match {
+      case Failure(e) => logger.error("Could not retrieve subtitles for episode batch", e)
     }
   }
 }
