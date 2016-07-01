@@ -1,8 +1,8 @@
-$(document).ready(function() {
+    $(document).ready(function() {
     $('#imdbSearchInput').autocomplete({
         serviceUrl: '/api/imovies/suggest',
         onSelect: function (suggestion) {
-            var id = suggestion.data.id
+            var id = suggestion.data.id;
             $.ajax({
                 url: "/api/imovies/" + id,
                 success: function(data) {
