@@ -34,3 +34,5 @@ GET     /episodes/:imdbId      controllers.EpisodesController.viewEpisodes(imdbI
 GET     /api/episodes/:imdbId  controllers.EpisodesController.episodes(imdbId: String)
 
 GET     /api/stats  controllers.StatsController.stats
+
+GET     /api/terms  controllers.TermsController.all

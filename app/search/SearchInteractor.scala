@@ -36,11 +36,11 @@ trait SearchInteractor {
   def close()
 }
 
-class ElasticSearchInteractor extends SearchInteractor{
+class ElasticSearchInteractor extends SearchInteractor {
   private val settings = Settings.settingsBuilder()
     .put("cluster.name", "lbs").build()
 
-  private val client = TransportClient.builder
+  protected val client = TransportClient.builder
     .settings(settings)
     .build()
     .addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress("localhost", 9300)))
