@@ -35,4 +35,5 @@ GET     /api/episodes/:imdbId  controllers.EpisodesController.episodes(imdbId: S
 
 GET     /api/stats  controllers.StatsController.stats
 
-GET     /api/terms  controllers.TermsController.all
+GET     /api/terms         controllers.TermsController.all
+GET     /api/terms/random  controllers.TermsController.random
