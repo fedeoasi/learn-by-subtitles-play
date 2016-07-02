@@ -6,7 +6,7 @@ import logging.Logging
 import persistence.PersistenceManager
 import services.SubtitlesService
 
-import scala.util.{Failure, Random, Try}
+import scala.util.{Failure, Random, Success, Try}
 
 class EpisodeDownloadingTask @Inject() (persistenceManager: PersistenceManager,
                                         subtitlesController: SubtitlesService)
@@ -25,6 +25,7 @@ class EpisodeDownloadingTask @Inject() (persistenceManager: PersistenceManager,
       }
     } match {
       case Failure(e) => logger.error("Could not retrieve subtitles for episode batch", e)
+      case Success(_) =>
     }
   }
 }
