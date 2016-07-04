@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import akka.actor.ActorSystem
-import language.TermsProvider
+import language.{Term, TermsProvider}
 import play.api.mvc.{Action, Controller}
 import serialization.JsonFormats
 import org.json4s.jackson.Serialization._
@@ -19,13 +19,16 @@ class TermsController @Inject() (actorSystem: ActorSystem,
 
   def all = Action.async {
     termsProvider.allTerms.map { terms =>
-      Ok(write(terms)).as(JSON)
+      Ok(write(TermsResponse(terms))).as(JSON)
     }
   }
 
   def random = Action.async {
     termsProvider.randomTerm.map { term =>
-      Ok(write(term)).as(JSON)
+      Ok(write(TermResponse(term))).as(JSON)
     }
   }
 }
+
+case class TermsResponse(terms: Seq[Term])
+case class TermResponse(term: Term)
