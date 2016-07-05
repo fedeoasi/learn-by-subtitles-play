@@ -16,6 +16,15 @@ function doSearch() {
     }
 }
 
+function randomTerm() {
+    $.ajax({
+        url: '/api/terms/random',
+        success: function(data) {
+            $('#imdbSearchInput').val(data.term.value);
+        }
+    });
+}
+
 function buildResultsTable(results) {
     if(!results || results.length == 0) {
         return "<span>No results found</span>";
@@ -46,3 +55,7 @@ function setResult(index) {
         }
     });
 }
+
+$(document).ready(function() {
+    $('#randomTermLink').click(randomTerm);
+});
