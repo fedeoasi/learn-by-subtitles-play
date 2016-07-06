@@ -180,14 +180,33 @@ class DatabaseSpec extends FunSpec with Matchers with WithPersistenceManager wit
         persistenceManager.subtitleDownloadsSince(time) should be(1)
       }
 
-      it("should not find any download error") {
+      it("does not find any download errors by imdbId") {
         persistenceManager.downloadErrorsFor("imdbId") shouldBe Seq.empty
+      }
+
+      it("does not find any download errors") {
+        persistenceManager.lastKDownloadErrors(2) shouldBe Seq.empty
       }
 
       it("should add and find a download error") {
         persistenceManager.saveDownloadError("sId", "imdbId", "Can't find file")
         persistenceManager.downloadErrorsFor("imdbId").size shouldBe 1
         persistenceManager.downloadErrorsFor("imdbId2").size shouldBe 0
+      }
+
+      it("should find a download error") {
+        val lastKDownloadErrors = persistenceManager.lastKDownloadErrors(2)
+        lastKDownloadErrors.size shouldBe 1
+      }
+
+      it("should find two download errors") {
+        persistenceManager.saveDownloadError("sId2", "imdbId", "Can't find file")
+        persistenceManager.lastKDownloadErrors(2).size shouldBe 2
+      }
+
+      it("should find the two latest download errors") {
+        persistenceManager.saveDownloadError("sId3", "imdbId", "Can't find file")
+        persistenceManager.lastKDownloadErrors(2).map(_.subtitleId) shouldBe Seq("sId3", "sId2")
       }
     }
   }

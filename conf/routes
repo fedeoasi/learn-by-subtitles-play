@@ -37,3 +37,5 @@ GET     /api/stats  controllers.StatsController.stats
 
 GET     /api/terms         controllers.TermsController.all
 GET     /api/terms/random  controllers.TermsController.random
+
+GET     /api/downloads/lastErrors  controllers.SubtitleDownloadController.lastKErrors()

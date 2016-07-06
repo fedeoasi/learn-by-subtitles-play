@@ -246,6 +246,12 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
 
+  override def lastKDownloadErrors(k: Int): Seq[DownloadError] = {
+    database.withSession { implicit s =>
+      downloadErrors.sortBy(_.time.desc).take(k).run
+    }
+  }
+
   override def listIMovies(): List[IMovie] = {
     database withSession { implicit s =>
       imovie.list
