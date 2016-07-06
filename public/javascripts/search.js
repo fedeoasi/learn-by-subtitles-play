@@ -4,7 +4,7 @@ function doSearch() {
     var title = $('#imdbSearchInput').val();
     if(title.length > 0) {
         $('#subtitles').html('');
-        $('#results').html('<span><img height="50px" src="/images/ajaxSpinner.gif"/> Searching for "' + title + '"</span>')
+        $('#results').html('<span><img height="50px" src="/assets/images/ajaxSpinner.gif"/> Searching for "' + title + '"</span>')
         $.ajax({
             url: "/api/search?query=" + title,
             context: document.body,
