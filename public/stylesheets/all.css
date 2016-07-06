@@ -1,5 +1,5 @@
 html, body {
-    font-family: "Ruda",Arial,sans-serif;
+    font-family: "Ruda", Arial, sans-serif;
     font-size: 20px;
 	margin: 0;
 	height: 100%;
@@ -17,18 +17,18 @@ ul.menu {
   list-style: none;
   overflow: hidden;
   position: relative;
-  margin: 20px 0px 20px 0px;
+  margin: 15px 0px 20px 0px;
   padding: 0px;
 }
 ul.menu li {
-  float: left; margin: 0 20px 0 0;
+  float: left; margin: 0 10px 0 0;
 }
 ul.menu li a {
     position:relative;
     display: block;
     width: 130px;
-    height: 78px;
-    padding-top: 52px;
+    height: 50px;
+    padding-top: 25px;
     text-transform: uppercase;
     text-decoration: none;
     text-align: center;
@@ -40,11 +40,11 @@ ul.menu li a.menuAction {
 
 ul.menu li a.title {
     margin-left: 20px;
-    padding-top: 30px;
+    padding-top: 13px;
     width:auto;
-    font-size: 60px;
+    font-size: 40px;
 }
-ul.menu li a span{
+ul.menu li a span {
   top: 55px;
   left: 0px;
   position:absolute;
