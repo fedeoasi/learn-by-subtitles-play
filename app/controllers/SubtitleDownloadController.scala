@@ -14,7 +14,7 @@ class SubtitleDownloadController @Inject() (persistenceManager: PersistenceManag
 
   def lastKErrors() = Action {
     val errors = persistenceManager.lastKDownloadErrors(25)
-    Ok(write(DownloadErrorsResponse(errors))).as(JSON)
+    Ok(writePretty(DownloadErrorsResponse(errors))).as(JSON)
   }
 }
 
