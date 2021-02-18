@@ -7,3 +7,7 @@ target
 /.settings
 /RUNNING_PID
 subtitleFiles
+/*.csv
+/*.db
+.history
+
