@@ -230,7 +230,11 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     val topKDownloads = database withSession { implicit s =>
       downloads.sortBy(_.time.desc).take(size).list
     }
-    topKDownloads.last.time.plusHours(hours)
+    if (topKDownloads.isEmpty) {
+      DateTime.now
+    } else {
+      topKDownloads.last.time.plusHours(hours)
+    }
   }
 
 
