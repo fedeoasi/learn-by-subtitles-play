@@ -11,6 +11,8 @@ import scala.io.Source
 import resource._
 
 object DumpImporter {
+  // The files used here are taken from https://m.imdb.com/interfaces/
+
   private val BasicsFile = Paths.get("/home/fcaimi/Downloads/title.basics.tsv.gz")
   private val RatingsFile = Paths.get("/home/fcaimi/Downloads/title.ratings.tsv.gz")
   private val MinVotes = 1000
