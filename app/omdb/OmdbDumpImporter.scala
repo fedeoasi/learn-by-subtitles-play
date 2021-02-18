@@ -55,14 +55,14 @@ object OmdbDumpImporter {
     pm.saveIMovies(imoviesToInsert)
   }
 
-  def computeAverageVote(titles: Seq[OmdbTitle]): BigDecimal = {
+  def computeAverageVote(titles: Seq[OmdbTitle]): Double = {
     val weightedSum = titles.map { m => m.imdbRating.get * m.imdbVotes.get }.sum
     val sumOfWeigths = titles.map { m => m.imdbVotes.get }.sum
-    BigDecimal(weightedSum) / sumOfWeigths
+    weightedSum / sumOfWeigths
   }
 
   def printTopK(titles: Array[OmdbTitle]): Unit = {
-    val sorted = titles.toArray.sortBy(_.imdbRating.get)
+    val sorted = titles.sortBy(_.imdbRating.get)
     val topK = sorted.filter(_.genre != "Documentary").reverse.take(50)
     topK.foreach(println)
   }

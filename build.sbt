@@ -45,6 +45,8 @@ libraryDependencies ++= Seq(
   "com.github.cb372" %% "scalacache-guava" % "0.9.1",
   joda,
   jodaConvert,
+  "com.github.tototoshi" %% "scala-csv" % "1.3.6",
+  "com.jsuereth" %% "scala-arm" % "2.0",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0-RC1" % Test
 ) ++ webJars
 

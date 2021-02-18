@@ -20,11 +20,7 @@ object OmdbDumpUtils {
   }
 
   def extractHeaderIndex(inputLines: Iterator[String]): Map[String, Int] = {
-    val fields = extractHeader(inputLines)
-    val indexByField = fields.zipWithIndex.map {
-      case (f, i) => f -> i
-    }.toMap
-    indexByField
+    extractHeader(inputLines).zipWithIndex.toMap
   }
 
   def parseOptionalInt(s: String): Option[Int] = Try {
