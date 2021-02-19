@@ -13,3 +13,5 @@ libraryDependencies ++= allLibraryDependencies
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
 scalacOptions ++= Seq("-Xfatal-warnings")
+
+scalafmtOnCompile := true

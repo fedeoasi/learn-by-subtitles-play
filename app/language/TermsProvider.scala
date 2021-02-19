@@ -2,21 +2,20 @@ package language
 
 import com.google.common.cache.CacheBuilder
 import com.google.inject.Inject
-import org.elasticsearch.search.aggregations.bucket.terms.{StringTerms, TermsBuilder}
+import org.elasticsearch.search.aggregations.bucket.terms.{ StringTerms, TermsBuilder }
 import search.ElasticSearchInteractor
 
 import scala.collection.JavaConverters._
 import scalacache._
 import guava._
 import memoization._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration._
 import scala.util.Random
 
 case class Term(value: String, docCount: Long)
 
-class TermsProvider @Inject() (implicit exec: ExecutionContext)
-  extends ElasticSearchInteractor {
+class TermsProvider @Inject() (implicit exec: ExecutionContext) extends ElasticSearchInteractor {
 
   private[this] val TermsAggregationName = "text_terms"
 
@@ -33,17 +32,20 @@ class TermsProvider @Inject() (implicit exec: ExecutionContext)
   }
 
   def extractTerms: Seq[Term] = {
-    val search = client.prepareSearch("my-index")
+    val search = client
+      .prepareSearch("my-index")
       .setTypes("subtitle")
       .addField("_id")
-      .addAggregation(new TermsBuilder(TermsAggregationName)
-        .field("text")
-        .size(1000000)
+      .addAggregation(
+        new TermsBuilder(TermsAggregationName)
+          .field("text")
+          .size(1000000)
       )
 
     val result = search.get()
 
-    val termsAggregation = result.getAggregations.get[StringTerms](TermsAggregationName)
+    val termsAggregation =
+      result.getAggregations.get[StringTerms](TermsAggregationName)
     val terms = termsAggregation.getBuckets.asScala.take(Limit).map { b =>
       Term(b.getKey.toString, b.getDocCount)
     }

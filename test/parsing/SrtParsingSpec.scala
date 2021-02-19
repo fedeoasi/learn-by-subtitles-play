@@ -1,9 +1,9 @@
 package parsing
 
-import java.io.{File, FileInputStream, StringWriter}
+import java.io.{ File, FileInputStream, StringWriter }
 
 import org.apache.commons.io.IOUtils
-import org.scalatest.{FunSpec, Matchers}
+import org.scalatest.{ FunSpec, Matchers }
 import scala.io.Source._
 
 class SrtParsingSpec extends FunSpec with Matchers {
@@ -25,10 +25,14 @@ class SrtParsingSpec extends FunSpec with Matchers {
       val input = loadFileIntoString("resources/4899518.srt")
       val entries = parser.parseSrt(input)
       entries.size should be(813)
-      entries.head.text should be("\nWaft your waves, ye waters!\nCarry your crests to the cradle!")
+      entries.head.text should be(
+        "\nWaft your waves, ye waters!\nCarry your crests to the cradle!"
+      )
       entries.head.number should be(1)
       entries(812).number should be(813)
-      entries(812).text should be("\nFalse and faint-hearted\nare those who revel above!")
+      entries(812).text should be(
+        "\nFalse and faint-hearted\nare those who revel above!"
+      )
       parser.countEntries(input) should be(813)
     }
 
@@ -42,7 +46,6 @@ class SrtParsingSpec extends FunSpec with Matchers {
       entries(562).text should be("\noh, and it's gonna be muddy.")
       parser.countEntries(input) should be(563)
     }
-
 
     it("should load another srt file into a list of entries") {
       val input = loadFileIntoString("resources/four-entries.srt")
@@ -77,7 +80,15 @@ class SrtParsingSpec extends FunSpec with Matchers {
       val lines = List(498, 505, 743, 768, 948, 1372, 1374)
       val intervals = parser.computeIntervals(lines, 1, 1374)
       intervals should be(
-        List((497, 499), (504, 506), (742, 744), (767, 769), (947, 949), (1371, 1373), (1374, 1374))
+        List(
+          (497, 499),
+          (504, 506),
+          (742, 744),
+          (767, 769),
+          (947, 949),
+          (1371, 1373),
+          (1374, 1374)
+        )
       )
     }
 
@@ -85,7 +96,14 @@ class SrtParsingSpec extends FunSpec with Matchers {
       val lines = List(498, 505, 743, 768, 948, 1372, 1374)
       val intervals = parser.computeIntervals(lines, 10, 1374)
       intervals should be(
-        List((488, 508), (509, 515), (733, 753), (758, 778), (938, 958), (1362, 1374))
+        List(
+          (488, 508),
+          (509, 515),
+          (733, 753),
+          (758, 778),
+          (938, 958),
+          (1362, 1374)
+        )
       )
     }
 
@@ -104,7 +122,9 @@ class SrtParsingSpec extends FunSpec with Matchers {
       val lines = parser.parseWithinHighlighted(input, 10)
       lines.size should be(104)
       lines.head.number should be(488)
-      lines.head.text should be("\nANNE: Oh! Where's the phone?\nWhere's the goddamn phone?!")
+      lines.head.text should be(
+        "\nANNE: Oh! Where's the phone?\nWhere's the goddamn phone?!"
+      )
       lines(103).number should be(1374)
       lines(103).text should be("\n<em>Lumbergh</em>?")
     }

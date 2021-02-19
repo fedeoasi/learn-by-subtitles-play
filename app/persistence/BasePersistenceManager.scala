@@ -37,7 +37,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
   override def markSubtitleAsIndexed(subId: String) {
     database withSession { implicit s =>
-      val q = for(s <- subtitles if s.id === subId) yield s.indexed
+      val q = for (s <- subtitles if s.id === subId) yield s.indexed
       q.update(true)
     }
   }
@@ -67,11 +67,41 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   def daoFromTitle(t: Title) = {
     t match {
       case m: Movie =>
-        TitleDao(m.imdbID, Some(m.year), Some(m.title), MovieType.discriminator, Some(m.posterUrl), None, None, None, m.id)
+        TitleDao(
+          m.imdbID,
+          Some(m.year),
+          Some(m.title),
+          MovieType.discriminator,
+          Some(m.posterUrl),
+          None,
+          None,
+          None,
+          m.id
+        )
       case s: Series =>
-        TitleDao(s.imdbID, Some(s.year), Some(s.title), SeriesType.discriminator, Some(s.posterUrl), None, None, None, s.id)
+        TitleDao(
+          s.imdbID,
+          Some(s.year),
+          Some(s.title),
+          SeriesType.discriminator,
+          Some(s.posterUrl),
+          None,
+          None,
+          None,
+          s.id
+        )
       case e: Episode =>
-        TitleDao(t.imdbID, None, None, EpisodeType.discriminator, None, Some(e.season), Some(e.number), Some(e.seriesImdbId), None)
+        TitleDao(
+          t.imdbID,
+          None,
+          None,
+          EpisodeType.discriminator,
+          None,
+          Some(e.season),
+          Some(e.number),
+          Some(e.seriesImdbId),
+          None
+        )
     }
   }
 
@@ -84,7 +114,10 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
   override def listSeries(): List[Series] = {
     database.withSession { implicit s =>
-      titles.filter(_.movieType === SeriesType.discriminator).list.map(seriesFromDao)
+      titles
+        .filter(_.movieType === SeriesType.discriminator)
+        .list
+        .map(seriesFromDao)
     }
   }
 
@@ -97,7 +130,8 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   override def findMovieById(imdbId: String): Option[Movie] = {
     database withSession { implicit s =>
       val q = for {
-        m <- titles if m.imdbId === imdbId && m.movieType === MovieType.discriminator
+        m <- titles
+        if m.imdbId === imdbId && m.movieType === MovieType.discriminator
       } yield m
       q.list.headOption.map(movieFromDao)
     }
@@ -116,16 +150,22 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
       q.list.headOption.map(seriesFromDao)
     }
   }
-  
-  private def movieFromDao(d: TitleDao): Movie = Movie(d.imdbID, d.year.get, d.title.get, d.posterUrl.get, d.id)
-  private def seriesFromDao(d: TitleDao): Series = Series(d.imdbID, d.year.get, d.title.get, d.posterUrl.get, d.id)
+
+  private def movieFromDao(d: TitleDao): Movie =
+    Movie(d.imdbID, d.year.get, d.title.get, d.posterUrl.get, d.id)
+  private def seriesFromDao(d: TitleDao): Series =
+    Series(d.imdbID, d.year.get, d.title.get, d.posterUrl.get, d.id)
 
   private def titleFromDao(m: TitleDao): Title = {
     TitleType.typesByDiscriminator(m.movieType) match {
-      case MovieType => Movie(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
-      case SeriesType => Series(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
-      case EpisodeType => Episode(m.imdbID, m.season.get, m.number.get, m.seriesImdbId.get)
-      case _ => throw new IllegalStateException(s"Unsupported title type for title $m")
+      case MovieType =>
+        Movie(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
+      case SeriesType =>
+        Series(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
+      case EpisodeType =>
+        Episode(m.imdbID, m.season.get, m.number.get, m.seriesImdbId.get)
+      case _ =>
+        throw new IllegalStateException(s"Unsupported title type for title $m")
     }
   }
 
@@ -139,15 +179,18 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   }
 
   override def saveSubtitle(subtitle: Subtitle) {
-    if (findSubtitleForMovie(subtitle.imdbId).isEmpty
-      && findSubtitleById(subtitle.id).isEmpty) {
+    if (
+      findSubtitleForMovie(subtitle.imdbId).isEmpty
+      && findSubtitleById(subtitle.id).isEmpty
+    ) {
       database withSession { implicit s =>
         subtitles.insert(subtitleDao(subtitle))
       }
     }
   }
 
-  private[this] def subtitleDao(s: Subtitle): SubtitleDao = SubtitleDao(s.id, s.imdbId, indexed = false)
+  private[this] def subtitleDao(s: Subtitle): SubtitleDao =
+    SubtitleDao(s.id, s.imdbId, indexed = false)
 
   override def findSubtitleForMovie(imdbId: String): Option[Subtitle] = {
     database withSession { implicit s =>
@@ -158,7 +201,8 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
 
-  private[this] def extractSubtitle(dao: SubtitleDao): Subtitle = Subtitle(dao.id, dao.imdbId)
+  private[this] def extractSubtitle(dao: SubtitleDao): Subtitle =
+    Subtitle(dao.id, dao.imdbId)
 
   override def saveEpisode(episode: Episode) {
     if (findEpisodeById(episode.imdbID).isEmpty) {
@@ -168,10 +212,15 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
 
-  override def findEpisodeForSeries(imdbId: String, seasonNumber: Int, episodeNumber: Int): Option[Episode] = {
+  override def findEpisodeForSeries(
+    imdbId: String,
+    seasonNumber: Int,
+    episodeNumber: Int
+  ): Option[Episode] = {
     database withSession { implicit s =>
       val q = for {
-        e <- titles if e.seriesImdbId === imdbId && e.season === seasonNumber && e.number === episodeNumber
+        e <- titles
+        if e.seriesImdbId === imdbId && e.season === seasonNumber && e.number === episodeNumber
       } yield e
       q.list.headOption.map(episodeFromDao)
     }
@@ -205,12 +254,15 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
   override def findEpisodesWithNoSubtitles(): List[Episode] = {
     database withSession { implicit s =>
-      val query = "select IMDB_ID, SEASON, NUMBER, SERIES_IMDB_ID from TITLES e " +
-        "where e.MOVIE_TYPE = 'e' and e.IMDB_ID not in (select IMDB_ID from SUBTITLES)"
-      StaticQuery.queryNA[(String, Option[Int], Option[Int], Option[String])](query).list.map {
-        case (imdbId, season, number, seriesImdbId) =>
+      val query =
+        "select IMDB_ID, SEASON, NUMBER, SERIES_IMDB_ID from TITLES e " +
+          "where e.MOVIE_TYPE = 'e' and e.IMDB_ID not in (select IMDB_ID from SUBTITLES)"
+      StaticQuery
+        .queryNA[(String, Option[Int], Option[Int], Option[String])](query)
+        .list
+        .map { case (imdbId, season, number, seriesImdbId) =>
           Episode(imdbId, season.get, number.get, seriesImdbId.get)
-      }
+        }
     }
   }
 
@@ -238,10 +290,15 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
 
-
-  override def saveDownloadError(subtitleId: String, imdbId: String, reason: String): Unit = {
+  override def saveDownloadError(
+    subtitleId: String,
+    imdbId: String,
+    reason: String
+  ): Unit = {
     database.withSession { implicit s =>
-      downloadErrors.insert(DownloadError(subtitleId, imdbId, DateTime.now, reason, None))
+      downloadErrors.insert(
+        DownloadError(subtitleId, imdbId, DateTime.now, reason, None)
+      )
     }
   }
 
@@ -295,7 +352,10 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
               val title = series.title + " s" + e.season + "e" + e.number
               imdbId -> title
           }
-        case None => throw new IllegalArgumentException(s"Could not find title with imdbId $imdbId")
+        case None =>
+          throw new IllegalArgumentException(
+            s"Could not find title with imdbId $imdbId"
+          )
       }
     }.toMap
   }
@@ -316,7 +376,6 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
         true
     }
   }
-
 
   def tryToSaveSeries(series: IMovie): Boolean = {
     findSeriesById(series.imdbId) match {

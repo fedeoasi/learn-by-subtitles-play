@@ -7,7 +7,9 @@ object TitleScorer {
       votes <- title.imdbVotes
     } yield computeScore(rating, votes, avgVote)
     result.getOrElse {
-      throw new RuntimeException(s"title $title needs to provide score and number of votes")
+      throw new RuntimeException(
+        s"title $title needs to provide score and number of votes"
+      )
     }
   }
 

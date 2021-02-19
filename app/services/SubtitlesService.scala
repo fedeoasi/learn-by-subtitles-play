@@ -6,9 +6,11 @@ import parsing.SrtParser
 import persistence.PersistenceManager
 import subtitles.SubtitleSearcher
 
-class SubtitlesService @Inject() (persistenceManager: PersistenceManager,
-                                  srtParser: SrtParser,
-                                  searcher: SubtitleSearcher) {
+class SubtitlesService @Inject() (
+    persistenceManager: PersistenceManager,
+    srtParser: SrtParser,
+    searcher: SubtitleSearcher
+) {
 
   def getSubtitlesForMovie(imdbId: String): List[SubEntry] = {
     var subtitles = List[SubEntry]()

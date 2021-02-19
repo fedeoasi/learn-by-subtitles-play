@@ -1,6 +1,6 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import model.SubEntry
 import play.api.mvc.InjectedController
 import services.SubtitlesService

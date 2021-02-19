@@ -9,17 +9,34 @@ trait Title {
   def id: Option[Int]
 }
 
-case class Movie(imdbID: String, year: Int, title: String, posterUrl: String, id: Option[Int]) extends Title {
+case class Movie(
+    imdbID: String,
+    year: Int,
+    title: String,
+    posterUrl: String,
+    id: Option[Int]
+) extends Title {
   def isSeries: Boolean = false
   def isSimpleMovie: Boolean = true
 }
 
-case class Series(imdbID: String, year: Int, title: String, posterUrl: String, id: Option[Int]) extends Title {
+case class Series(
+    imdbID: String,
+    year: Int,
+    title: String,
+    posterUrl: String,
+    id: Option[Int]
+) extends Title {
   def isSeries: Boolean = true
   def isSimpleMovie: Boolean = false
 }
 
-case class Episode(imdbID: String, season: Int, number: Int, seriesImdbId: String) extends Title {
+case class Episode(
+    imdbID: String,
+    season: Int,
+    number: Int,
+    seriesImdbId: String
+) extends Title {
   override def isSimpleMovie: Boolean = false
   override def isSeries: Boolean = false
   override def id: Option[Int] = ???
@@ -29,21 +46,23 @@ case class Season(parentImdbID: String, seasonNumber: Int, episodes: Int)
 case class SubEntry(number: Int, start: Date, stop: Date, text: String)
 case class Subtitle(id: String, imdbId: String)
 case class SubtitleWithContent(subtitle: Subtitle, content: String)
-case class IMovie(otherId: Long,
-                  title: String,
-                  year: Int,
-                  rating: BigDecimal,
-                  votes: Long,
-                  score: BigDecimal,
-                  genre: String,
-                  poster: String,
-                  titleType: TitleType,
-                  imdbId: String) {
+case class IMovie(
+    otherId: Long,
+    title: String,
+    year: Int,
+    rating: BigDecimal,
+    votes: Long,
+    score: BigDecimal,
+    genre: String,
+    poster: String,
+    titleType: TitleType,
+    imdbId: String
+) {
   def toTitle: Title = {
     titleType match {
-      case MovieType => Movie(imdbId, year, title, poster, None)
+      case MovieType  => Movie(imdbId, year, title, poster, None)
       case SeriesType => Series(imdbId, year, title, poster, None)
-      case _ => throw new IllegalArgumentException
+      case _          => throw new IllegalArgumentException
     }
   }
 
@@ -63,8 +82,8 @@ object TitleType {
   def get(s: String): Option[TitleType] = typesByDiscriminator.get(s)
 
   val types = Set(MovieType, SeriesType, EpisodeType, ShortType)
-  val typesByDiscriminator: Map[String, TitleType] = types.flatMap {
-    t => Seq(t.discriminator -> t, t.name -> t)
+  val typesByDiscriminator: Map[String, TitleType] = types.flatMap { t =>
+    Seq(t.discriminator -> t, t.name -> t)
   }.toMap
 }
 

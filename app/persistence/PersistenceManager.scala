@@ -14,7 +14,11 @@ trait TitlePersistence {
   //TODO Deletion for Series?
   def listSeries(): List[Series]
   def saveEpisode(episode: Episode)
-  def findEpisodeForSeries(imdbId: String, seasonNumber: Int, episodeNumber: Int): Option[Episode]
+  def findEpisodeForSeries(
+    imdbId: String,
+    seasonNumber: Int,
+    episodeNumber: Int
+  ): Option[Episode]
   def findEpisodesForSeries(imdbId: String): List[Episode]
   def findEpisodeById(id: String): Option[Episode]
   def findTitleById(imdbId: String): Option[Title]
@@ -49,7 +53,8 @@ trait IMoviePersistence {
   def saveIMovieAsSeries(series: IMovie): Boolean
 }
 
-trait PersistenceManager extends TitlePersistence
-  with SubtitlePersistence
-  with IMoviePersistence
-  with SubtitleDownloadPersistence
+trait PersistenceManager
+    extends TitlePersistence
+    with SubtitlePersistence
+    with IMoviePersistence
+    with SubtitleDownloadPersistence

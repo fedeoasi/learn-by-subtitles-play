@@ -2,17 +2,18 @@ package controllers
 
 import javax.inject.Inject
 import akka.actor.ActorSystem
-import language.{Term, TermsProvider}
+import language.{ Term, TermsProvider }
 import play.api.mvc.InjectedController
 import serialization.JsonFormats
 import org.json4s.jackson.Serialization._
 
 import scala.concurrent.ExecutionContext
 
-class TermsController @Inject() (actorSystem: ActorSystem,
-                                 termsProvider: TermsProvider)
-                                (implicit exec: ExecutionContext)
-  extends InjectedController {
+class TermsController @Inject() (
+    actorSystem: ActorSystem,
+    termsProvider: TermsProvider
+)(implicit exec: ExecutionContext)
+    extends InjectedController {
 
   implicit val formats = JsonFormats
 

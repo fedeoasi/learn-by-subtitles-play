@@ -10,10 +10,12 @@ class ProdPersistenceManager extends BasePersistenceManager with Logging {
   override val dal: LearnBySubtitlesDAL = new LearnBySubtitlesDAL(SQLiteDriver)
 }
 
-object ProdPersistenceManager{
+object ProdPersistenceManager {
   lazy val INSTANCE = new ProdPersistenceManager()
   def apply() = {
-    Logger(classOf[ProdPersistenceManager]).info("Initializing Production database")
+    Logger(classOf[ProdPersistenceManager]).info(
+      "Initializing Production database"
+    )
     INSTANCE
   }
 }

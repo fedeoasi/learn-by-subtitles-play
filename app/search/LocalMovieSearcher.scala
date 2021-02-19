@@ -3,10 +3,11 @@ package search
 import model.Title
 import persistence.PersistenceManager
 
-
-class LocalMovieSearcher(persistenceManager: PersistenceManager,
-                         elasticSearchInteractor: SearchInteractor,
-                         imovieIndexName: String) extends MovieSearcher {
+class LocalMovieSearcher(
+    persistenceManager: PersistenceManager,
+    elasticSearchInteractor: SearchInteractor,
+    imovieIndexName: String
+) extends MovieSearcher {
 
   override def searchTitleJson(title: String): String = ???
 

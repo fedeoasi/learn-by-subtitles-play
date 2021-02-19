@@ -11,8 +11,8 @@ object IndexIMoviesTask {
     searchInteractor.ensureMovieIndex(Config.movieIndexName)
     val toBeIndexed = persistenceManager.listIMovies()
     println(s"Found ${toBeIndexed.size} IMovies to index")
-    toBeIndexed.zipWithIndex.foreach {
-      case (m, i) => searchInteractor.indexIMovie(Config.movieIndexName, m, flush = false)
+    toBeIndexed.zipWithIndex.foreach { case (m, i) =>
+      searchInteractor.indexIMovie(Config.movieIndexName, m, flush = false)
     }
   }
 }

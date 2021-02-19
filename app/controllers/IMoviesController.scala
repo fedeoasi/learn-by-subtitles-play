@@ -1,26 +1,27 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
-import model.{IMovie, MovieType, SeriesType}
+import javax.inject.{ Inject, Singleton }
+import model.{ IMovie, MovieType, SeriesType }
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.InjectedController
-import search.{SearchInteractor, SuggestionResult}
+import search.{ SearchInteractor, SuggestionResult }
 import serialization.JsonFormats
 import subtitles.SeriesDetailProvider
 
 @Singleton
-class IMoviesController @Inject()(searchInteractor: SearchInteractor,
-                                  persistenceManager: PersistenceManager,
-                                  seriesDetailProvider: SeriesDetailProvider)
-  extends InjectedController {
+class IMoviesController @Inject() (
+    searchInteractor: SearchInteractor,
+    persistenceManager: PersistenceManager,
+    seriesDetailProvider: SeriesDetailProvider
+) extends InjectedController {
 
   implicit val formats = JsonFormats
 
   def imovie(id: String) = Action {
     persistenceManager.findIMovieById(id) match {
       case Some(imovie) => Ok(write(imovie)).as(JSON)
-      case None => NotFound("")
+      case None         => NotFound("")
     }
   }
 
@@ -63,7 +64,9 @@ class IMoviesController @Inject()(searchInteractor: SearchInteractor,
   }
 }
 
-case class IMovieSuggestion(text: String, suggestions: List[AutocompleteSuggestion])
+case class IMovieSuggestion(
+    text: String,
+    suggestions: List[AutocompleteSuggestion]
+)
 case class AutocompleteSuggestion(value: String, data: SuggestionResult)
 case class IMoviesResponse(imovies: List[IMovie])
-

@@ -1,7 +1,7 @@
 package controllers
 
-import com.google.inject.{Inject, Singleton}
-import model.{Episode, Series}
+import com.google.inject.{ Inject, Singleton }
+import model.{ Episode, Series }
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.InjectedController

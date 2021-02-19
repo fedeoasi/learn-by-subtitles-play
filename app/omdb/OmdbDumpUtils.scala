@@ -10,7 +10,9 @@ object OmdbDumpUtils {
   val tabRegex = "\\t"
   val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault)
 
-  def extractInterestingFieldIndex(indexByField: Map[String, Int]): List[Int] = {
+  def extractInterestingFieldIndex(
+    indexByField: Map[String, Int]
+  ): List[Int] = {
     interestingFields.map { f => indexByField(f) }
   }
 

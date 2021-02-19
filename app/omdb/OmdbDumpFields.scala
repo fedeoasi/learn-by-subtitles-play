@@ -13,6 +13,7 @@ object OmdbDumpFields {
   val Type = "Type"
   val Year = "Year"
 
-  val interestingFields = Id :: ImdbId :: Year :: ImdbRating :: ImdbVotes :: Title :: Runtime :: Genre ::
-    Poster :: LastUpdated :: Type :: Nil
+  val interestingFields =
+    Id :: ImdbId :: Year :: ImdbRating :: ImdbVotes :: Title :: Runtime :: Genre ::
+      Poster :: LastUpdated :: Type :: Nil
 }

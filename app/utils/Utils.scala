@@ -10,7 +10,11 @@ object Utils {
 
   def readFileIntoString(path: String): String = {
     val stringWriter: StringWriter = new StringWriter()
-    IOUtils.copy(new FileInputStream(new File(path)), stringWriter, charset.name())
+    IOUtils.copy(
+      new FileInputStream(new File(path)),
+      stringWriter,
+      charset.name()
+    )
     stringWriter.toString
   }
 

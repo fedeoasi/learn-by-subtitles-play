@@ -2,10 +2,10 @@ package modules
 
 import com.google.inject.AbstractModule
 import logging.Logging
-import persistence.{ProdPersistenceManager, PersistenceManager}
-import play.api.{Configuration, Environment}
-import search.{ElasticSearchInteractor, SearchInteractor}
-import subtitles.{SeriesDetailProvider, OpenSubtitlesSearcher, SubtitleSearcher}
+import persistence.{ ProdPersistenceManager, PersistenceManager }
+import play.api.{ Configuration, Environment }
+import search.{ ElasticSearchInteractor, SearchInteractor }
+import subtitles.{ SeriesDetailProvider, OpenSubtitlesSearcher, SubtitleSearcher }
 
 class AppModule(env: Environment, config: Configuration) extends AbstractModule with Logging {
   override def configure(): Unit = {

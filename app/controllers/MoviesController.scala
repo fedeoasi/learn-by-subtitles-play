@@ -1,14 +1,14 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
-import model.{Movie, Series}
+import javax.inject.{ Inject, Singleton }
+import model.{ Movie, Series }
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
 import play.api.mvc.InjectedController
 import serialization.JsonFormats
 
 @Singleton
-class MoviesController @Inject()(persistenceManager: PersistenceManager) extends InjectedController {
+class MoviesController @Inject() (persistenceManager: PersistenceManager) extends InjectedController {
   implicit val formats = JsonFormats
 
   def viewMovie(search: Option[String]) = Action {
@@ -34,8 +34,8 @@ class MoviesController @Inject()(persistenceManager: PersistenceManager) extends
   }
 
   def series = Action {
-      val series = persistenceManager.listSeries()
-      Ok(write(SeriesResponse(serializeSeries(series)))).as(JSON)
+    val series = persistenceManager.listSeries()
+    Ok(write(SeriesResponse(serializeSeries(series)))).as(JSON)
   }
 
   private def serializeMovies(movies: List[Movie]): List[SerializedTitle] = {
@@ -55,4 +55,9 @@ class MoviesController @Inject()(persistenceManager: PersistenceManager) extends
 
 case class MoviesResponse(movies: List[SerializedTitle])
 case class SeriesResponse(series: List[SerializedTitle])
-case class SerializedTitle(imdbID: String, year: Int, title: String, posterUrl: String)
+case class SerializedTitle(
+    imdbID: String,
+    year: Int,
+    title: String,
+    posterUrl: String
+)

@@ -3,7 +3,7 @@ package persistence
 import java.sql.Timestamp
 
 import model._
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.{ DateTime, DateTimeZone }
 
 import scala.slick.driver.JdbcDriver
 
@@ -30,18 +30,26 @@ trait DBComponent {
 //  }
 }
 
-case class TitleDao(imdbID: String,
-                    year: Option[Int],
-                    title: Option[String],
-                    movieType: String,
-                    posterUrl: Option[String],
-                    season: Option[Int],
-                    number: Option[Int],
-                    seriesImdbId: Option[String],
-                    id: Option[Int])
+case class TitleDao(
+    imdbID: String,
+    year: Option[Int],
+    title: Option[String],
+    movieType: String,
+    posterUrl: Option[String],
+    season: Option[Int],
+    number: Option[Int],
+    seriesImdbId: Option[String],
+    id: Option[Int]
+)
 case class SubtitleDao(id: String, imdbId: String, indexed: Boolean)
 
-case class DownloadError(subtitleId: String, imdbId: String, time: DateTime, reason: String, id: Option[Int])
+case class DownloadError(
+    subtitleId: String,
+    imdbId: String,
+    time: DateTime,
+    reason: String,
+    id: Option[Int]
+)
 
 trait LearnBySubtitlesDbComponent extends DBComponent {
   this: Profile =>
@@ -50,8 +58,8 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
 
   object CustomColumnTypes {
     implicit lazy val jodaType = MappedColumnType.base[DateTime, Timestamp](
-      {d => new Timestamp(d.getMillis)} ,
-      {d => new DateTime(d.getTime, DateTimeZone.UTC)}
+      { d => new Timestamp(d.getMillis) },
+      { d => new DateTime(d.getTime, DateTimeZone.UTC) }
     )
   }
 
@@ -64,7 +72,17 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
     def season = column[Option[Int]]("SEASON")
     def number = column[Option[Int]]("NUMBER")
     def seriesImdbId = column[Option[String]]("SERIES_IMDB_ID")
-    def * = (imdbId, year, title, movieType, posterUrl, season, number, seriesImdbId, id.?) <> (TitleDao.tupled, TitleDao.unapply)
+    def * = (
+      imdbId,
+      year,
+      title,
+      movieType,
+      posterUrl,
+      season,
+      number,
+      seriesImdbId,
+      id.?
+    ) <> (TitleDao.tupled, TitleDao.unapply)
   }
 
   object titles extends TableQuery(new Titles(_))
@@ -92,17 +110,23 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
     def imdbId = column[String]("IMDB_ID")
     def time = column[DateTime]("TIME")
     def reason = column[String]("REASON")
-    def * = (subtitleId, imdbId, time, reason, id.?) <> (DownloadError.tupled, DownloadError.unapply)
+    def * = (
+      subtitleId,
+      imdbId,
+      time,
+      reason,
+      id.?
+    ) <> (DownloadError.tupled, DownloadError.unapply)
   }
 
   object downloadErrors extends TableQuery(new DownloadErrors(_))
 
   implicit val titleTypeColumnType = MappedColumnType.base[TitleType, String](
-    { tt => tt.discriminator },    // map Bool to Int
+    { tt => tt.discriminator }, // map Bool to Int
     { s => TitleType(s) } // map Int to Bool
   )
 
-  class IMovies(tag:Tag) extends Table[IMovie](tag, "IMOVIE") {
+  class IMovies(tag: Tag) extends Table[IMovie](tag, "IMOVIE") {
     def otherId = column[Long]("OTHER_ID")
     def title = column[String]("TITLE")
     def year = column[Int]("YEAR")
@@ -113,7 +137,18 @@ trait LearnBySubtitlesDbComponent extends DBComponent {
     def poster = column[String]("POSTER")
     def imdbId = column[String]("IMDB_ID")
     def titleType = column[TitleType]("TYPE")
-    def * = (otherId, title, year, rating, votes, score, genre, poster, titleType, imdbId) <> (IMovie.tupled, IMovie.unapply)
+    def * = (
+      otherId,
+      title,
+      year,
+      rating,
+      votes,
+      score,
+      genre,
+      poster,
+      titleType,
+      imdbId
+    ) <> (IMovie.tupled, IMovie.unapply)
   }
 
   object imovie extends TableQuery(new IMovies(_))

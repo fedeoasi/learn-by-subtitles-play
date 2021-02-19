@@ -1,16 +1,18 @@
 package controllers
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.{ Inject, Singleton }
 import org.json4s.DefaultFormats
 import org.json4s.jackson.Serialization._
-import persistence.{DownloadError, PersistenceManager}
+import persistence.{ DownloadError, PersistenceManager }
 import play.api.mvc.InjectedController
 
 @Singleton
-class SubtitleDownloadController @Inject() (persistenceManager: PersistenceManager)
-  extends InjectedController {
+class SubtitleDownloadController @Inject() (
+    persistenceManager: PersistenceManager
+) extends InjectedController {
 
-  implicit val formats = DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
+  implicit val formats =
+    DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
 
   def lastKErrors() = Action {
     val errors = persistenceManager.lastKDownloadErrors(25)

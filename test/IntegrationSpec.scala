@@ -1,10 +1,9 @@
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerTest
 
-/**
- * add your integration spec here.
- * An integration test will fire up a whole play application in a real (or headless) browser
- */
+/** add your integration spec here.
+  * An integration test will fire up a whole play application in a real (or headless) browser
+  */
 class IntegrationSpec extends PlaySpec with GuiceOneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
 
   "Application" should {
@@ -13,7 +12,7 @@ class IntegrationSpec extends PlaySpec with GuiceOneServerPerTest with OneBrowse
 
       go to ("http://localhost:" + port)
 
-      pageSource must include ("Learn by Subtitles")
+      pageSource must include("Learn by Subtitles")
     }
   }
 }

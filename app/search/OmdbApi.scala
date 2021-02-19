@@ -3,7 +3,7 @@ package search
 import dispatch.Defaults._
 import dispatch._
 import logging.Logging
-import model.{Movie, Title, TitleType}
+import model.{ Movie, Title, TitleType }
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import serialization.JsonFormats
@@ -36,10 +36,10 @@ class OmdbApi extends MovieSearcher with Logging {
   def parseMovie(jsonString: String): Option[Movie] = {
     val json = parse(jsonString)
     val modified = json transformField {
-      case ("Title", x) => ("title", x)
-      case ("Year", x) => ("year", JInt(extractYear(x.extract[String])))
+      case ("Title", x)  => ("title", x)
+      case ("Year", x)   => ("year", JInt(extractYear(x.extract[String])))
       case ("Poster", x) => ("posterUrl", x)
-      case ("Type", x) => ("movieType", x)
+      case ("Type", x)   => ("movieType", x)
     }
     try {
       Some(modified.extract[Movie])
@@ -51,7 +51,10 @@ class OmdbApi extends MovieSearcher with Logging {
   }
 }
 
-class TitleTypeSerializer extends CustomSerializer[TitleType](format => (
-  { case JString(s) => TitleType.typesByDiscriminator(s) },
-  { case t: TitleType => JString(t.discriminator) }
-))
+class TitleTypeSerializer
+    extends CustomSerializer[TitleType](format =>
+      (
+        { case JString(s) => TitleType.typesByDiscriminator(s) },
+        { case t: TitleType => JString(t.discriminator) }
+      )
+    )

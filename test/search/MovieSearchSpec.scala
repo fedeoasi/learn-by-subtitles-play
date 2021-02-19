@@ -4,17 +4,51 @@ import java.util.UUID
 
 import logging.Logging
 import model._
-import org.scalatest.{FunSpec, Matchers}
+import org.scalatest.{ FunSpec, Matchers }
 import persistence.WithPersistenceManager
 
 class MovieSearchSpec extends FunSpec with Matchers with Logging with WithPersistenceManager {
   private val esi = new ElasticSearchInteractor
   val imovieIndexName = s"test-imovie-${UUID.randomUUID().toString}"
   esi.ensureMovieIndex(imovieIndexName)
-  private val ms = new LocalMovieSearcher(persistenceManager, esi, imovieIndexName)
-  val firstIMovie = IMovie(1, "Movie One", 2000, BigDecimal(9), 1000, 100, "Action", "p1", MovieType, "abc")
-  val secondIMovie = IMovie(2, "Movie Two", 2005, BigDecimal(79), 2000, 200, "Drama", "p2", MovieType, "bcd")
-  val thirdIMovie = IMovie(3, "Series One", 2003, BigDecimal(80), 2001, 300, "Drama", "p3", SeriesType, "cde")
+  private val ms =
+    new LocalMovieSearcher(persistenceManager, esi, imovieIndexName)
+  val firstIMovie = IMovie(
+    1,
+    "Movie One",
+    2000,
+    BigDecimal(9),
+    1000,
+    100,
+    "Action",
+    "p1",
+    MovieType,
+    "abc"
+  )
+  val secondIMovie = IMovie(
+    2,
+    "Movie Two",
+    2005,
+    BigDecimal(79),
+    2000,
+    200,
+    "Drama",
+    "p2",
+    MovieType,
+    "bcd"
+  )
+  val thirdIMovie = IMovie(
+    3,
+    "Series One",
+    2003,
+    BigDecimal(80),
+    2001,
+    300,
+    "Drama",
+    "p3",
+    SeriesType,
+    "cde"
+  )
 
   val firstMovie = Movie("abc", 2000, "Movie One", "p1", None)
   val secondMovie = Movie("bcd", 2005, "Movie Two", "p2", None)
@@ -38,7 +72,7 @@ class MovieSearchSpec extends FunSpec with Matchers with Logging with WithPersis
       esi.indexIMovie(imovieIndexName, thirdIMovie, flush = true)
       ms.searchTitle("Series One") should be(Some(firstSeries))
     }
-    
+
     it("cleans up") {
       esi.deleteIndex(imovieIndexName)
     }

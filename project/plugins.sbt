@@ -18,3 +18,5 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.2")
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.11")
 
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.10.0-RC1")
+
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")

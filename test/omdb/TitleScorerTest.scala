@@ -1,9 +1,8 @@
 package omdb
 
-import org.scalatest.{FunSpec, Matchers}
+import org.scalatest.{ FunSpec, Matchers }
 
-/**
-  * Created by fcaimi on 5/14/16.
+/** Created by fcaimi on 5/14/16.
   */
 class TitleScorerTest extends FunSpec with Matchers {
   import TitleScorer._
