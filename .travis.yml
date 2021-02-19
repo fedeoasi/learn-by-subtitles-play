@@ -4,7 +4,7 @@ scala:
 script:
   - sbt test
 jdk:
-  - oraclejdk8
+  - openjdk8
 notifications:
   email:
     - fedeoasi+lbs@gmail.com
