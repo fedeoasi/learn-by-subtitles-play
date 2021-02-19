@@ -5,7 +5,7 @@ import org.joda.time.DateTime
 import org.json4s.DefaultFormats
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.InjectedController
 import subtitles.SubtitleSearcher
 
 case class Stats(movieCount: Int,
@@ -16,7 +16,7 @@ case class Stats(movieCount: Int,
                  nextAvailableDownload: DateTime)
 
 class StatsController @Inject()(persistenceManager: PersistenceManager,
-                                subtitleSearcher: SubtitleSearcher) extends Controller {
+                                subtitleSearcher: SubtitleSearcher) extends InjectedController {
   implicit val formats = DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
 
   def stats = Action {

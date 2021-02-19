@@ -1,11 +1,10 @@
 package controllers
 
 import javax.inject.{Inject, Singleton}
-
-import model.{EpisodeType, IMovie, MovieType, SeriesType}
+import model.{IMovie, MovieType, SeriesType}
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.InjectedController
 import search.{SearchInteractor, SuggestionResult}
 import serialization.JsonFormats
 import subtitles.SeriesDetailProvider
@@ -14,7 +13,7 @@ import subtitles.SeriesDetailProvider
 class IMoviesController @Inject()(searchInteractor: SearchInteractor,
                                   persistenceManager: PersistenceManager,
                                   seriesDetailProvider: SeriesDetailProvider)
-  extends Controller {
+  extends InjectedController {
 
   implicit val formats = JsonFormats
 

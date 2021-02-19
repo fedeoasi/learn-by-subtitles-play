@@ -4,11 +4,11 @@ import com.google.inject.{Inject, Singleton}
 import model.{Episode, Series}
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, Controller, InjectedController}
 import serialization.JsonFormats
 
 @Singleton
-class EpisodesController @Inject() (persistenceManager: PersistenceManager) extends Controller {
+class EpisodesController @Inject() (persistenceManager: PersistenceManager) extends InjectedController {
   implicit val formats = JsonFormats
 
   def viewEpisodes(imdbId: String) = Action {

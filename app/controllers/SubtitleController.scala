@@ -1,15 +1,14 @@
 package controllers
 
 import javax.inject.{Inject, Singleton}
-
 import model.SubEntry
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, Controller, InjectedController}
 import services.SubtitlesService
 import org.json4s.jackson.Serialization._
 import serialization.JsonFormats
 
 @Singleton
-class SubtitleController @Inject() (service: SubtitlesService) extends Controller {
+class SubtitleController @Inject() (service: SubtitlesService) extends InjectedController {
   implicit val formats = JsonFormats
 
   def viewSubtitle(imdbId: String) = Action {

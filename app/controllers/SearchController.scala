@@ -1,12 +1,11 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
 import config.Config
+import javax.inject.{Inject, Singleton}
 import org.json4s.jackson.Serialization._
 import parsing.SrtParser
 import persistence.PersistenceManager
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.InjectedController
 import search.{SearchInteractor, SearchSubtitleResult}
 import serialization.JsonFormats
 
@@ -14,7 +13,7 @@ import serialization.JsonFormats
 class SearchController @Inject() (parser: SrtParser,
                                   persistenceManager: PersistenceManager,
                                   searchInteractor: SearchInteractor)
-  extends Controller {
+  extends InjectedController {
 
   implicit val formats = JsonFormats
 

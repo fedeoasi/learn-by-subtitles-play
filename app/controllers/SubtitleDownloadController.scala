@@ -4,11 +4,11 @@ import com.google.inject.{Inject, Singleton}
 import org.json4s.DefaultFormats
 import org.json4s.jackson.Serialization._
 import persistence.{DownloadError, PersistenceManager}
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.InjectedController
 
 @Singleton
 class SubtitleDownloadController @Inject() (persistenceManager: PersistenceManager)
-  extends Controller {
+  extends InjectedController {
 
   implicit val formats = DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
 
