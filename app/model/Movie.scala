@@ -43,7 +43,7 @@ case class IMovie(otherId: Long,
     titleType match {
       case MovieType => Movie(imdbId, year, title, poster, None)
       case SeriesType => Series(imdbId, year, title, poster, None)
-      case EpisodeType => throw new IllegalArgumentException
+      case _ => throw new IllegalArgumentException
     }
   }
 

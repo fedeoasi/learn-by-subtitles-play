@@ -125,6 +125,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
       case MovieType => Movie(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
       case SeriesType => Series(m.imdbID, m.year.get, m.title.get, m.posterUrl.get, m.id)
       case EpisodeType => Episode(m.imdbID, m.season.get, m.number.get, m.seriesImdbId.get)
+      case _ => throw new IllegalStateException(s"Unsupported title type for title $m")
     }
   }
 

@@ -1,5 +1,6 @@
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 
+import com.github.ghik.silencer.silent
 import config.Config
 import logging.Logging
 import persistence.PersistenceManager
@@ -7,6 +8,7 @@ import play.GlobalSettings
 import search.{EpisodeDownloadingTask, SearchInteractor, SubtitleIndexingTask}
 import subtitles.SubtitleSearcher
 
+@silent("deprecated")
 class Global extends GlobalSettings with Logging {
   private var indexerPool: ScheduledExecutorService = _
   private var downloaderPool: ScheduledExecutorService = _

@@ -56,7 +56,7 @@ class IMoviesController @Inject()(searchInteractor: SearchInteractor,
             seriesDetailProvider.get(imovie.imdbId)
             persistenceManager.saveIMovieAsSeries(imovie)
             Ok("""{"info":"Series is now part of the collection"}""").as(JSON)
-          case EpisodeType =>
+          case _ =>
             Ok("""{"info":"Nothing to add"""")
         }
       case None => NotFound("""{"info":"Did not add movie"}""").as(JSON)

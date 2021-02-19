@@ -4,6 +4,7 @@ import sbt._
 object Dependencies {
   object Versions {
     val scalacache = "0.9.1"
+    val silencer = "1.7.1"
   }
 
   private val commonsIo = "org.apache.commons" % "commons-io" % "1.3.2"
@@ -25,6 +26,8 @@ object Dependencies {
   private val scalaArm = "com.jsuereth" %% "scala-arm" % "2.0"
   private val scalaCsv = "com.github.tototoshi" %% "scala-csv" % "1.3.6"
   private val scalaTestPlay = "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0-RC1" % Test
+  private val silencerLib = "com.github.ghik" % "silencer-lib" % Versions.silencer % Provided cross CrossVersion.full
+  private val silencerPlugin = compilerPlugin("com.github.ghik" % "silencer-plugin" % Versions.silencer cross CrossVersion.full)
   private val slick = "com.typesafe.slick" %% "slick" % "2.1.0"
   private val sqliteJdbc = "org.xerial" % "sqlite-jdbc" % "3.8.7"
 
@@ -67,6 +70,8 @@ object Dependencies {
     jodaConvert,
     scalaCsv,
     scalaArm,
-    scalaTestPlay
+    scalaTestPlay,
+    silencerLib,
+    silencerPlugin
   ) ++ webJars
 }
