@@ -5,11 +5,18 @@ import java.nio.file.{Path, Paths}
 import java.util.zip.GZIPInputStream
 
 import com.github.tototoshi.csv.{CSVReader, CSVWriter, DefaultCSVFormat, QUOTE_NONE, Quoting}
+import model.IMovie
 import omdb.TitleScorer
-
-import scala.io.Source
+import persistence.ProdPersistenceManager
 import resource._
 
+import scala.io.Source
+
+/** Imports movies from IMDB dumps that are required to be on disk. The dumps are listed at
+ *  https://m.imdb.com/interfaces/.
+ *
+ *  TODO: support genres and all title types when inserting into the database.
+ */
 object DumpImporter {
   // The files used here are taken from https://m.imdb.com/interfaces/
 
@@ -33,7 +40,7 @@ object DumpImporter {
 
   case class ImdbRating(imdb: String, votes: Int, vote: String)
 
-  case class ImdbTitle(imdbId: String, title: String, rating: String, voteCount: Int, startYear: Option[String], titleType: String) {
+  case class ImdbTitle(imdbId: String, title: String, rating: Double, voteCount: Int, startYear: Option[Int], titleType: String) {
     val toCsvLine: Seq[Any] = Seq(imdbId, title, rating, voteCount, startYear.getOrElse("-"), titleType)
   }
 
@@ -56,11 +63,12 @@ object DumpImporter {
       iterator.map { fields =>
         val id = fields(ImdbId)
         val rating = ratingsByImdb(id)
-        ImdbTitle(id, fields(Title), rating.vote, rating.votes, fields.getOpt(StartYear), fields(TitleType))
+        ImdbTitle(id, fields(Title), rating.vote.toDouble, rating.votes, fields.getOpt(StartYear).map(_.toInt), fields(TitleType))
       }.toList
     }
+    val avgVote = computeAverageVote(titles)
     val scoredTitles = titles.map { title =>
-      ScoredTitle(TitleScorer.computeScore(title.rating.toDouble, title.voteCount, 7.0), title)
+      ScoredTitle(TitleScorer.computeScore(title.rating, title.voteCount, avgVote), title)
     }
 
     managed(CSVWriter.open("imdb_titles.csv")).acquireAndGet { writer =>
@@ -69,6 +77,16 @@ object DumpImporter {
     managed(CSVWriter.open("imdb_movies.csv")).acquireAndGet { writer =>
       writer.writeAll(scoredTitles.filter(_.title.titleType == "movie").map(_.toCsvLine))
     }
+
+    val pm = ProdPersistenceManager()
+
+    val imoviesToInsert = scoredTitles.flatMap { scoredTitle =>
+      model.TitleType.get(scoredTitle.title.titleType).map { titleType =>
+        val title = scoredTitle.title
+        IMovie(0, title.title, title.startYear.getOrElse(0), BigDecimal(scoredTitle.title.rating), scoredTitle.title.voteCount, scoredTitle.score, "", "", titleType, Some(scoredTitle.title.imdbId))
+      }
+    }
+    pm.saveIMovies(imoviesToInsert)
   }
 
   private implicit class FieldsOps(fields: Map[String, String]) {
@@ -76,6 +94,12 @@ object DumpImporter {
       case "\\N" => None
       case other => Some(other)
     }
+  }
+
+  def computeAverageVote(titles: Seq[ImdbTitle]): Double = {
+    val weightedSum = titles.map { m => m.rating * m.voteCount }.sum
+    val sumOfWeigths = titles.map { m => m.voteCount }.sum
+    weightedSum / sumOfWeigths
   }
 
   def reader(file: Path): CSVReader = {

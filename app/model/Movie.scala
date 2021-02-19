@@ -60,8 +60,9 @@ sealed trait TitleType {
 
 object TitleType {
   def apply(s: String): TitleType = typesByDiscriminator(s)
+  def get(s: String): Option[TitleType] = typesByDiscriminator.get(s)
 
-  val types = Set(MovieType, SeriesType, EpisodeType)
+  val types = Set(MovieType, SeriesType, EpisodeType, ShortType)
   val typesByDiscriminator: Map[String, TitleType] = types.flatMap {
     t => Seq(t.discriminator -> t, t.name -> t)
   }.toMap
@@ -70,6 +71,10 @@ object TitleType {
 case object MovieType extends TitleType {
   override def discriminator: String = "m"
   override def name: String = "movie"
+}
+case object ShortType extends TitleType {
+  override def discriminator: String = "sh"
+  override def name: String = "short"
 }
 case object SeriesType extends TitleType {
   override def discriminator: String = "s"
