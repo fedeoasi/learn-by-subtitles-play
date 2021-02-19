@@ -47,7 +47,6 @@ object Dependencies {
 
   val allLibraryDependencies: Seq[ModuleID] = Seq(
     jdbc,
-    cache,
     ws,
     flyway,
     xmlRpc,

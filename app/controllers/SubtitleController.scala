@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import model.SubEntry
-import play.api.mvc.{Action, Controller, InjectedController}
+import play.api.mvc.InjectedController
 import services.SubtitlesService
 import org.json4s.jackson.Serialization._
 import serialization.JsonFormats

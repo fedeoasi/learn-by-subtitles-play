@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 import akka.actor.ActorSystem
 import language.{Term, TermsProvider}
-import play.api.mvc.{Action, Controller, InjectedController}
+import play.api.mvc.InjectedController
 import serialization.JsonFormats
 import org.json4s.jackson.Serialization._
 

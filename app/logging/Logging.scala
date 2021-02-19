@@ -1,5 +1,7 @@
 package logging
 
+import play.api.Logger
+
 trait Logging {
-  val logger = play.api.Logger.logger
+  protected val logger = Logger(getClass)
 }

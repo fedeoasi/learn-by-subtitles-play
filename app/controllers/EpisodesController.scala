@@ -4,7 +4,7 @@ import com.google.inject.{Inject, Singleton}
 import model.{Episode, Series}
 import org.json4s.jackson.Serialization._
 import persistence.PersistenceManager
-import play.api.mvc.{Action, Controller, InjectedController}
+import play.api.mvc.InjectedController
 import serialization.JsonFormats
 
 @Singleton

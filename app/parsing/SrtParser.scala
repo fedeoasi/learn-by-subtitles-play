@@ -7,9 +7,10 @@ import java.util.regex.Pattern
 
 import com.google.inject.Inject
 import model.SubEntry
-import play.api.Logger._
 
-class SrtParser @Inject() () {
+import logging.Logging
+
+class SrtParser @Inject() () extends Logging {
   private val timePattern = Pattern.compile("\\d\\d:\\d\\d:\\d\\d,\\d\\d\\d")
   val timeFormat = new SimpleDateFormat("HH:mm:ss,SSS")
 

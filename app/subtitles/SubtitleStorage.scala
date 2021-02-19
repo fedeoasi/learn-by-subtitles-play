@@ -1,6 +1,8 @@
 package subtitles
 
-import java.io.{FileOutputStream, StringReader, File}
+import java.io.{File, FileOutputStream, StringReader}
+import java.nio.charset.Charset
+
 import utils.Utils._
 import model.Subtitle
 import org.apache.commons.io.IOUtils
@@ -17,7 +19,7 @@ class LocalSubtitleStorage extends SubtitleStorage {
 
   def persistSubtitleFile(subtitle: Subtitle, subtitleString: String): Unit = {
     require(!subtitle.id.isEmpty)
-    IOUtils.copy(new StringReader(subtitleString), new FileOutputStream(getSubtitleFileLocation(subtitle.id)))
+    IOUtils.copy(new StringReader(subtitleString), new FileOutputStream(getSubtitleFileLocation(subtitle.id)), Charset.defaultCharset())
   }
 
   private def getSubtitleFileLocation(id: String): String =
