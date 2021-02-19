@@ -12,9 +12,9 @@ class MovieSearchSpec extends FunSpec with Matchers with Logging with WithPersis
   val imovieIndexName = s"test-imovie-${UUID.randomUUID().toString}"
   esi.ensureMovieIndex(imovieIndexName)
   private val ms = new LocalMovieSearcher(persistenceManager, esi, imovieIndexName)
-  val firstIMovie = IMovie(1, "Movie One", 2000, BigDecimal(9), 1000, 100, "Action", "p1", MovieType, Some("abc"))
-  val secondIMovie = IMovie(2, "Movie Two", 2005, BigDecimal(79), 2000, 200, "Drama", "p2", MovieType, Some("bcd"))
-  val thirdIMovie = IMovie(3, "Series One", 2003, BigDecimal(80), 2001, 300, "Drama", "p3", SeriesType, Some("cde"))
+  val firstIMovie = IMovie(1, "Movie One", 2000, BigDecimal(9), 1000, 100, "Action", "p1", MovieType, "abc")
+  val secondIMovie = IMovie(2, "Movie Two", 2005, BigDecimal(79), 2000, 200, "Drama", "p2", MovieType, "bcd")
+  val thirdIMovie = IMovie(3, "Series One", 2003, BigDecimal(80), 2001, 300, "Drama", "p3", SeriesType, "cde")
 
   val firstMovie = Movie("abc", 2000, "Movie One", "p1", None)
   val secondMovie = Movie("bcd", 2005, "Movie Two", "p2", None)

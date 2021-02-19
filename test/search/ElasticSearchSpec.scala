@@ -99,10 +99,10 @@ class ElasticSearchSpec extends FunSpec with Matchers with Logging {
     it("should suggest names of movies") {
       withInteractorAndIndex {
         case (interactor, name) =>
-          interactor.indexMovie(name, 1, "How I Met Your Mother", flush = false)
-          interactor.indexMovie(name, 2, "How to get away with murder", flush = false)
-          interactor.indexMovie(name, 3, "Murder, She Wrote", flush = true)
-          interactor.indexMovie(name, 4, "Mountain hike", flush = true)
+          interactor.indexMovie(name, "1", "How I Met Your Mother", flush = false)
+          interactor.indexMovie(name, "2", "How to get away with murder", flush = false)
+          interactor.indexMovie(name, "3", "Murder, She Wrote", flush = true)
+          interactor.indexMovie(name, "4", "Mountain hike", flush = true)
           interactor.suggestMovie(name, "How").size should be(2)
           interactor.suggestMovie(name, "M").size should be(2)
           interactor.suggestMovie(name, "Mu").size should be(1)
