@@ -14,8 +14,8 @@ GET     /search               controllers.SearchController.viewSearch()
 GET     /api/search           controllers.SearchController.search(query: String)
 
 GET     /api/imovies/suggest       controllers.IMoviesController.suggest(query: String)
-GET     /api/imovies/:id           controllers.IMoviesController.imovie(id: Int)
-GET     /api/imovies/addMovie/:id  controllers.IMoviesController.addMovie(id: Int)
+GET     /api/imovies/:id           controllers.IMoviesController.imovie(id: String)
+GET     /api/imovies/addMovie/:id  controllers.IMoviesController.addMovie(id: String)
 GET     /api/imovies               controllers.IMoviesController.imovies()
 GET     /imovies                   controllers.IMoviesController.viewImovies()
 

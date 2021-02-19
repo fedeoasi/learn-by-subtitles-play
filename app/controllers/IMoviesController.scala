@@ -18,7 +18,7 @@ class IMoviesController @Inject()(searchInteractor: SearchInteractor,
 
   implicit val formats = JsonFormats
 
-  def imovie(id: Int) = Action {
+  def imovie(id: String) = Action {
     persistenceManager.findIMovieById(id) match {
       case Some(imovie) => Ok(write(imovie)).as(JSON)
       case None => NotFound("")
@@ -45,7 +45,7 @@ class IMoviesController @Inject()(searchInteractor: SearchInteractor,
     }
   }
 
-  def addMovie(id: Int) = Action {
+  def addMovie(id: String) = Action {
     persistenceManager.findIMovieById(id) match {
       case Some(imovie) =>
         imovie.titleType match {
@@ -53,7 +53,7 @@ class IMoviesController @Inject()(searchInteractor: SearchInteractor,
             persistenceManager.saveIMovieAsMovie(imovie)
             Ok("""{"info":"Movie is now part of the collection"}""").as(JSON)
           case SeriesType =>
-            seriesDetailProvider.get(imovie.imdbId.get)
+            seriesDetailProvider.get(imovie.imdbId)
             persistenceManager.saveIMovieAsSeries(imovie)
             Ok("""{"info":"Series is now part of the collection"}""").as(JSON)
           case EpisodeType =>

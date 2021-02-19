@@ -274,9 +274,9 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
     }
   }
 
-  override def findIMovieById(id: Int): Option[IMovie] = {
+  override def findIMovieById(id: String): Option[IMovie] = {
     database withSession { implicit s =>
-      imovie.filter(_.otherId === id.toLong).list.headOption
+      imovie.filter(_.imdbId === id).list.headOption
     }
   }
 
@@ -308,7 +308,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
   }
 
   def tryToSaveMovie(imovie: IMovie): Boolean = {
-    findMovieById(imovie.imdbId.get) match {
+    findMovieById(imovie.imdbId) match {
       case Some(movie) => true
       case None =>
         saveMovie(toMovie(imovie))
@@ -318,7 +318,7 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
 
   def tryToSaveSeries(series: IMovie): Boolean = {
-    findSeriesById(series.imdbId.get) match {
+    findSeriesById(series.imdbId) match {
       case Some(movie) => true
       case None =>
         saveSeries(series.toSeries)
@@ -328,6 +328,6 @@ abstract class BasePersistenceManager extends PersistenceManager with Logging {
 
   //TODO move this to IMovie or kill it
   private def toMovie(m: IMovie): Movie = {
-    Movie(m.imdbId.get, m.year, m.title, m.poster, None)
+    Movie(m.imdbId, m.year, m.title, m.poster, None)
   }
 }

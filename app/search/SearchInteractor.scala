@@ -75,7 +75,7 @@ class ElasticSearchInteractor extends SearchInteractor {
           |{
           | "movie": {
           |   "properties": {
-          |     "id" : { "type" : "integer" },
+          |     "id" : { "type" : "string" },
           |     "title" : { "type" : "string" },
           |     "title_suggest" : {
           |       "type" : "completion",
@@ -108,10 +108,10 @@ class ElasticSearchInteractor extends SearchInteractor {
   }
 
   def indexIMovie(index: String, imovie: IMovie, flush: Boolean): Boolean = {
-    indexMovie(index, imovie.otherId, imovie.title, flush)
+    indexMovie(index, imovie.imdbId, imovie.title, flush)
   }
 
-  def indexMovie(index: String, id: Long, title: String, flush: Boolean): Boolean = {
+  def indexMovie(index: String, id: String, title: String, flush: Boolean): Boolean = {
     val json = ("id" -> id) ~ ("title" -> title) ~ ("title_suggest" -> ("input" -> title) ~ ("payload" -> id))
     val compactJson = compact(render(json))
     val response = client.prepareIndex(index, "movie")

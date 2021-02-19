@@ -83,7 +83,7 @@ object DumpImporter {
     val imoviesToInsert = scoredTitles.flatMap { scoredTitle =>
       model.TitleType.get(scoredTitle.title.titleType).map { titleType =>
         val title = scoredTitle.title
-        IMovie(0, title.title, title.startYear.getOrElse(0), BigDecimal(scoredTitle.title.rating), scoredTitle.title.voteCount, scoredTitle.score, "", "", titleType, Some(scoredTitle.title.imdbId))
+        IMovie(0, title.title, title.startYear.getOrElse(0), BigDecimal(scoredTitle.title.rating), scoredTitle.title.voteCount, scoredTitle.score, "", "", titleType, scoredTitle.title.imdbId)
       }
     }
     pm.saveIMovies(imoviesToInsert)

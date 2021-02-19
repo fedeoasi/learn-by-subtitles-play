@@ -9,7 +9,7 @@ $(document).ready(function() {
     "aaSorting": [[ 2, "desc" ]],
     "aoColumns": [
           { "mData": "otherId", "sTitle": "Other Id", "sType": "html", "sWidth": "100px" },
-          { "mData": "title", "sTitle": "Title", "sClass": "movieTitle" },
+          { "mData": "title", "sTitle": "Title", "sClass": "movieTitle", "sWidth": "400px" },
           { "mData": "year", "sTitle": "Year", "sWidth": "200px" },
           { "mData": "genre", "sTitle": "Genre", "sWidth": "500px" },
           { "mData": "rating", "sTitle": "Rating", "sWidth": "100px" },

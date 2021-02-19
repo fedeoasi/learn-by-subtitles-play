@@ -13,7 +13,7 @@ class LocalMovieSearcher(persistenceManager: PersistenceManager,
   override def searchTitle(title: String): Option[Title] = {
     val list = elasticSearchInteractor.suggestMovieFull(imovieIndexName, title)
     list.headOption.flatMap { t =>
-      val id = t.id.toInt
+      val id = t.id
       val optionalMovie = persistenceManager.findIMovieById(id)
       optionalMovie.map(_.toTitle)
     }

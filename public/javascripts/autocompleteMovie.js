@@ -8,6 +8,9 @@
                 success: function(data) {
                   console.log(JSON.stringify(data));
                   renderIMovie(data);
+                },
+                error: function() {
+                  console.log('could not retrieve movie with id ' + id)
                 }
             });
         },
@@ -24,7 +27,7 @@ function renderIMovie(movie) {
             ul.append('<li><span class="attrKey">' + p + '</span> - <span class="attrValue">' + movie[p] + '</span></li>');
         }
     }
-    ul.append('<li><button class="bg-red" onclick="addMovie(' + movie.otherId + ')">Add</button></li>');
+    ul.append('<li><button class="bg-red" onclick="addMovie(\'' + movie.imdbId + '\')">Add</button></li>');
     attrDiv.append(ul);
     var movieDiv = $('#movieDiv');
     movieDiv.html('');
@@ -39,6 +42,7 @@ function addMovie(movieId) {
             $('#info').html(data.info);
         },
         error: function() {
+            console.log('could not add movie')
             $('#info').html('Could not add movie');
         }
     });

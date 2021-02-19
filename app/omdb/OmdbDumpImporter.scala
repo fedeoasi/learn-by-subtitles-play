@@ -50,7 +50,7 @@ object OmdbDumpImporter {
     println(s"The average vote is $avgVote")
     val imoviesToInsert = moviesWithImdbVotes.map { om =>
       val score = TitleScorer.computeScore(om, avgVote)
-      IMovie(om.id, om.title, om.year, BigDecimal(om.imdbRating.get), om.imdbVotes.get, score, om.genre, om.poster, TitleType(om.titleType), Some(om.imdbId))
+      IMovie(om.id, om.title, om.year, BigDecimal(om.imdbRating.get), om.imdbVotes.get, score, om.genre, om.poster, TitleType(om.titleType), om.imdbId)
     }
     pm.saveIMovies(imoviesToInsert)
   }

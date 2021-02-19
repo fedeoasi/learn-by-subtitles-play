@@ -38,18 +38,18 @@ case class IMovie(otherId: Long,
                   genre: String,
                   poster: String,
                   titleType: TitleType,
-                  imdbId: Option[String]) {
+                  imdbId: String) {
   def toTitle: Title = {
     titleType match {
-      case MovieType => Movie(imdbId.get, year, title, poster, None)
-      case SeriesType => Series(imdbId.get, year, title, poster, None)
+      case MovieType => Movie(imdbId, year, title, poster, None)
+      case SeriesType => Series(imdbId, year, title, poster, None)
       case EpisodeType => throw new IllegalArgumentException
     }
   }
 
   def toSeries: Series = {
     require(titleType == SeriesType)
-    Series(imdbId.get, year, title, poster, None)
+    Series(imdbId, year, title, poster, None)
   }
 }
 
