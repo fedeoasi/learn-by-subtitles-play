@@ -1,0 +1,14 @@
+language: scala
+scala:
+  - 2.11.12
+script:
+  - sbt test
+jdk:
+  - oraclejdk8
+notifications:
+  email:
+    - fedeoasi+lbs@gmail.com
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/boot/
