@@ -5,7 +5,6 @@ import com.google.inject.Inject
 import org.slf4j.LoggerFactory
 import play.api.mvc.{Filter, RequestHeader, Result}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 class LoggingFilter @Inject() (implicit val mat: Materializer,

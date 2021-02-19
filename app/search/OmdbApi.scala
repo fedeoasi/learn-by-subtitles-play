@@ -18,7 +18,7 @@ class OmdbApi extends MovieSearcher with Logging {
 
   def searchTitleJson(title: String): String = {
     val request = url("http://www.omdbapi.com") <<? Map("t" -> title)
-    val responseString = Http(request OK as.String)
+    val responseString = Http.default(request OK as.String)
     val jsonString = responseString()
     logger.debug("json: " + jsonString)
     jsonString

@@ -7,7 +7,7 @@ import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
 import org.apache.xmlrpc.client.XmlRpcSunHttpTransportFactory
 import java.net.URL
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import model.Subtitle
 import scala.collection.{immutable, mutable}
 import org.joda.time.DateTime
@@ -127,11 +127,11 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
         val byEpisodeNumber = g._2.groupBy(_.get("SeriesEpisode").get.toInt)
         byEpisodeNumber.keysIterator.foreach { k =>
           val firstEpisodeMap = byEpisodeNumber.get(k).get(0)
-          val firstEpisode = getSeriesEpisode(firstEpisodeMap)
+          val firstEpisode = getSeriesEpisode(firstEpisodeMap.asJava)
           episodeList += Episode(firstEpisode._2, seasonNumber, firstEpisode._1, imdbId)
         }
         //TODO improve this.
-        val episode: (Int, String) = getSeriesEpisode(g._2.maxBy(m => getSeriesEpisode(m)._1))
+        val episode: (Int, String) = getSeriesEpisode(g._2.maxBy(m => getSeriesEpisode(m.asJava)._1).asJava)
         Season(imdbId, seasonNumber, episode._1)
       }.toList
        .sortBy(s => s.seasonNumber)
@@ -206,7 +206,7 @@ class OpenSubtitlesSearcher @Inject() (persistenceManager: PersistenceManager)
   private def subtitleResultsToMap(candidates: Array[Object],
                                    imdbId: String): Array[immutable.Map[String, String]] = {
     try {
-      candidates.map(asJavaStringMap(_).toMap)
+      candidates.map(asJavaStringMap(_).asScala.toMap)
     } catch {
       case NonFatal(e) =>
         logger.error(s"Unable to process open subtitle results for imdbId: $imdbId")

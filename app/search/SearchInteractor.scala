@@ -19,7 +19,7 @@ import org.elasticsearch.search.suggest.completion.{CompletionSuggestion, Comple
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 trait SearchInteractor {
   def ensureIndexExists(name: String, setup: CreateIndexRequestBuilder => Unit = s => Unit): Boolean
@@ -141,7 +141,7 @@ class ElasticSearchInteractor extends SearchInteractor {
     val results = suggestBuilder.execute().actionGet()
     val suggestion = results.getSuggest.getSuggestion("movie").asInstanceOf[CompletionSuggestion]
     val optionalMovie = Option(suggestion).map { s =>
-      val options = suggestion.getEntries.head.getOptions
+      val options = suggestion.getEntries.asScala.head.getOptions.asScala
       options.map { o =>
         SuggestionResult(o.getPayloadAsString, o.getText.string(), o.getScore)
       }.sortBy(_.title.length).toList
@@ -176,8 +176,8 @@ class ElasticSearchInteractor extends SearchInteractor {
       .setQuery(QueryBuilders.termQuery("text", query))
       .execute()
       .actionGet()
-    val ids = response.getHits.map(_.getId)
-    val scores = response.getHits.map(_.getScore)
+    val ids = response.getHits.asScala.map(_.getId)
+    val scores = response.getHits.asScala.map(_.getScore)
     if(ids.isEmpty) {
       List[SubEntrySearchResult]()
     } else {
@@ -195,7 +195,7 @@ class ElasticSearchInteractor extends SearchInteractor {
       .setQuery(QueryBuilders.matchPhraseQuery("text", query))
       .execute()
       .actionGet()
-    val hits = response.getHits
+    val hits = response.getHits.asScala
     hits.map {
       hit =>
         SubtitleSearchResult(hit.getHighlightFields.get("text").getFragments()(0).string(),
@@ -221,10 +221,10 @@ class ElasticSearchInteractor extends SearchInteractor {
   }
 
   def getSubtitleEntries(index: String, ids: List[String], scores: List[Float]): List[SubEntrySearchResult] = {
-    val response: MultiGetResponse = client.prepareMultiGet().add(index, "entry", ids).execute().actionGet()
+    val response: MultiGetResponse = client.prepareMultiGet().add(index, "entry", ids.asJava).execute().actionGet()
     val getResponseIterator: util.Iterator[MultiGetItemResponse] = response.iterator()
     //mapToSubtitleEntry(r.getResponse.getSourceAsMap())
-    val entries = getResponseIterator.zip(scores.iterator).map {
+    val entries = getResponseIterator.asScala.zip(scores.iterator).map {
       e => mapToSubtitleEntry(e._1.getResponse.getSourceAsMap, e._2)
     }
     entries.toList
@@ -250,7 +250,7 @@ class ElasticSearchInteractor extends SearchInteractor {
       .setQuery(QueryBuilders.matchQuery("movieId", imdbId))
       .execute()
       .actionGet()
-    val hits = response.getHits
+    val hits = response.getHits.asScala
     hits.map(_.getId).toList
   }
 }

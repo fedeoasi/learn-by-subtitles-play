@@ -3,14 +3,14 @@ import sbt._
 
 object Dependencies {
   object Versions {
-    val scalacache = "0.9.1"
+    val scalacache = "0.10.0"
     val silencer = "1.7.1"
     val json4s = "3.5.5"
   }
 
   private val commonsIo = "org.apache.commons" % "commons-io" % "1.3.2"
   private val commonsLang = "commons-lang" % "commons-lang" % "2.6"
-  private val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.11.3"
+  private val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.13.4"
   private val elasticSearch = "org.elasticsearch" % "elasticsearch" % "2.4.6"
   private val flyway = "org.flywaydb" % "flyway-core" % "3.2.1"
   private val guava = "com.google.guava" % "guava" % "19.0"
