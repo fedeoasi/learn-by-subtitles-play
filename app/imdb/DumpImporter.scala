@@ -32,6 +32,7 @@ object DumpImporter {
     val ImdbId = "tconst"
 
     val TitleType = "titleType"
+    val Genres = "genres"
     val Title = "originalTitle"
     val StartYear = "startYear"
     // sample entry: Map(runtimeMinutes -> \N, tconst -> tt0215145, titleType -> movie, originalTitle -> Sant Janabai,
@@ -50,7 +51,8 @@ object DumpImporter {
       rating: Double,
       voteCount: Int,
       startYear: Option[Int],
-      titleType: String
+      titleType: String,
+      genres: Seq[String]
   ) {
     val toCsvLine: Seq[Any] =
       Seq(imdbId, title, rating, voteCount, startYear.getOrElse("-"), titleType)
@@ -84,7 +86,8 @@ object DumpImporter {
           rating.vote.toDouble,
           rating.votes,
           fields.getOpt(StartYear).map(_.toInt),
-          fields(TitleType)
+          fields(TitleType),
+          fields(Genres).split(",")
         )
       }.toList
     }
@@ -117,7 +120,7 @@ object DumpImporter {
           BigDecimal(scoredTitle.title.rating),
           scoredTitle.title.voteCount,
           scoredTitle.score,
-          "",
+          scoredTitle.title.genres.mkString(","),
           "",
           titleType,
           scoredTitle.title.imdbId
@@ -142,7 +145,7 @@ object DumpImporter {
 
   def reader(file: Path): CSVReader = {
     val source = Source.fromInputStream(gzipStream(file))
-    val VeryRareCharacter = '|'
+    val VeryRareCharacter = 1.toChar
     CSVReader.open(source)(new DefaultCSVFormat {
       override val delimiter: Char = '\t'
       override val lineTerminator: String = "\n"
